@@ -11,7 +11,7 @@ configure and create your base application for different versions of Jakarta EE.
 application for our book catalog. Go to the following link and create the application using and artifact id related to a 
 book catalog. Here is the link of the Jakarta Starter: [Jakarta Starter](https://start.jakarta.ee/)
 
-![Jakarta EE Starter](img\jakartaEEStarter.png)
+![Jakarta EE Starter](img/jakartaEEStarter.png)
 
 ---
 **NOTE**
@@ -26,18 +26,18 @@ At this moment only Open Liberty runtime is available for the starter configurat
 
 After that, you can decompress on any location of your local environment, here is an example of the structure of the folders:
 
-![Jakarta Starter App](img\folderStarterApp.png)
+![Jakarta Starter App](img/folderStarterApp.png)
 
 You can open with your desired IDE. In my case, I opened with IntelliJ IDEA:
 
-![Jakarta App with IDEA](img\appOpenedWithIDEA.png)
+![Jakarta App with IDEA](img/appOpenedWithIDEA.png)
 
 As you can see from the details of the application, you can identify the pom.xml file that indicates that this application is based on maven. This is why it is important to install the software requirements indicated in the first module.
 
 #### Configuring pom.xml
 To advance with our Workshop we need to provide the correct configuration of our pom.xml file. You can check the default pom file provided from the Jakarta Starter, here the example:
 
-![Default pom configuration](img\pomFileStructure.png)
+![Default pom configuration](img/pomFileStructure.png)
 
 How we will build a web application, we need to update our pom configuration to indicate that we are going to use web profile.
 
@@ -64,7 +64,7 @@ with this we don't need to worry about to control their generation with a sequen
 #### **Task**
 Now is the time for a new task. In this task, your work will be to create a class based on the following model:
 
-![Book Entity Model](img\bookModel.png)
+![Book Entity Model](img/bookModel.png)
 
 save the entity class on a different package from the default provided from the Jakarta Starter application
 
@@ -115,25 +115,25 @@ To deploy an application, we have two ways that we can choose:
 To deploy using the Admin console, we must need to go to the following url: localhost:4848
 This will open the Payara Admin console, here is an example:
 
-![Payara Admin Console](img\payaraAdminConsole.png)
+![Payara Admin Console](img/payaraAdminConsole.png)
 
 Then you need to go to the Applications section and select option deploy to select the war file that you want to deploy to the application server, here is an example:
 
-![Admin Console Application Option](img\payaraApplicationsDeploy.png)
+![Admin Console Application Option](img/payaraApplicationsDeploy.png)
 
-![Admin Console Application Deploy File](img\payaraApplicationDeployFile.png)
+![Admin Console Application Deploy File](img/payaraApplicationDeployFile.png)
 
 Then you click on the OK option to proceed with the deployment. Once deployed, you will see the following page: 
 
-![Admin Console Deploy Finished](img\payaraDeployFinished.png)
+![Admin Console Deploy Finished](img/payaraDeployFinished.png)
 
 Finally, click on the application and select View Endpoints to select the following endpoint that is provided from the default source from the Jakarta Starter application: /jakartaee-book-store/rest/hello or open with the full url: localhost:8080/jakartaee-book-store/rest/hello
 
-![Payara Application Info](img\payaraApplicationDeployInfo.png)
+![Payara Application Info](img/payaraApplicationDeployInfo.png)
 
-![Payara Application View Endpoints](img\payaraApplicationViewEndpoints.png)
+![Payara Application View Endpoints](img/payaraApplicationViewEndpoints.png)
 
-![Hello Endpoint](img\callingHelloEndpoint.png)
+![Hello Endpoint](img/callingHelloEndpoint.png)
 
 ##### Using command line
 
@@ -145,11 +145,11 @@ asadmin deploy pathofyourwar/name.war
 
 wait for a few seconds and then check logs from the terminal, this is an example:
 
-![Deploy Command](img\deployCommand.png)
+![Deploy Command](img/deployCommand.png)
 
 The message **Command deploy executed successfully** indicates that the application now is ready to use. Open browser tab and go to the following url: localhost:8080/jakartaee-book-store/rest/hello
 
-![Hello World](img\helloWorldFromBrowser.png)
+![Hello World](img/helloWorldFromBrowser.png)
 
 -----
 #### **Task**
@@ -171,9 +171,9 @@ What we need to do is just to open the HelloWorldResource class and add the foll
 
 With this line, what we are going to achieve is the automatic creation of tables and sequence to the database. We can check that with our client DB, from IntelliJ IDEA or another tool like NetBeans. Here are some examples:
 
-![IntelliJ IDEA Database Viewer](img\intelliJDatabaseViewer.png)
+![IntelliJ IDEA Database Viewer](img/intelliJDatabaseViewer.png)
 
-![NetBeans Database Viewer](img\netBeansDatabaseViewer.png)
+![NetBeans Database Viewer](img/netBeansDatabaseViewer.png)
 -----
 #### **Task**
 Declare the injection of the PersistenceContext to the HelloWorldResource class, after that redeploy application and verify if the table and sequence are available in the database.
@@ -182,11 +182,11 @@ Declare the injection of the PersistenceContext to the HelloWorldResource class,
 
 Once the application is available now from a query console using IntelliJ IDEA or another tool. Connect to the database and execute the query provided for you. Here are some examples:
 
-![Insert execution from IntelliJ IDEA](img\intelliJInsertExecution.png)
+![Insert execution from IntelliJ IDEA](img/intelliJInsertExecution.png)
 
 Verify the data added on the table
 
-![Inserted rows](img\insertedRows.png)
+![Inserted rows](img/insertedRows.png)
 
 -----
 #### **Task**
@@ -223,7 +223,7 @@ We are going to use JUnit 5 to create our integration test. To simplify this, I 
 
 Copy that file and set on the corresponding place for unit test files on your project. On my side it looks as follows:
 
-![Structure of folder for Unit Test](img\structureOfFoldersTest.png)
+![Structure of folder for Unit Test](img/structureOfFoldersTest.png)
 
 Another thing that we need to edit is the persistence.xml file ti declare an addition persistence unit for the integration tests. Edit your file and add the following content:
 
@@ -241,7 +241,7 @@ Another thing that we need to edit is the persistence.xml file ti declare an add
 ```
 My final persistence.xml file looks as follows:
 
-![Edit Persistence for Unit Testing](img\persistenceWithAdditionalPersistenceUnit.png)
+![Edit Persistence for Unit Testing](img/persistenceWithAdditionalPersistenceUnit.png)
 
 ---
 **NOTE**
@@ -262,7 +262,7 @@ mvn test
 ```
 You will see and output like this:
 
-![Result of test execution](img\resultOfTestExecution.png)
+![Result of test execution](img/resultOfTestExecution.png)
 
 ### Introduction to Records
 
@@ -283,7 +283,7 @@ If you want to have more information about Records, please check the following l
 
 Check out the current Entity for Book:
 
-![Book Model](img\bookModel.png)
+![Book Model](img/bookModel.png)
 
 From this definition probably we can define a DTO to get a subset of the information for some purpose
 
@@ -368,7 +368,7 @@ public record Address(String street, String city, String state, String zip) {
 #### **Task**
 Now we will define the new components to use Embeddable. For this, we need to create the following model:
 
-![Model Complete](img\diagramModelComplete.png)
+![Model Complete](img/diagramModelComplete.png)
 
 To reduce time, I provided the resources for this model on the sources of this module. Please copy the content of the files and move to your project.
 
@@ -461,7 +461,7 @@ mvn clean install package
 
 Review the results from the unit test. On my side, this is my result:
 
-![Results for two unit tests](img\resultsTwoUnitTests.png)
+![Results for two unit tests](img/resultsTwoUnitTests.png)
 
 -----
 
@@ -564,7 +564,7 @@ or
 mvn clean install package
 ```
 
-![Results for three unit tests](img\resultsThreeUnitTests.png)
+![Results for three unit tests](img/resultsThreeUnitTests.png)
 
 -----
 

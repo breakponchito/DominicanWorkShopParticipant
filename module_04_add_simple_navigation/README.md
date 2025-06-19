@@ -20,7 +20,7 @@ To start, we need to add the structure of folder for web application and also in
 - web.xml (here we will configure the JSF Servlet to resolve our views and the life cycle of JSF)
 - beans.xml (this is to work with CDI beans, by default, the method to start CDI beans is the mode annotated)
 
-![Structure of Folder](img\structureOfFolderWebApp.png)
+![Structure of Folder](img/structureOfFolderWebApp.png)
 
 We can start to configure our application to use JSF. To make that, we need to declare the Servlet that is going to resolve our views. You need to declare the following Servlet on your web.xml file:
 

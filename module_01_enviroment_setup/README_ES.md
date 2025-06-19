@@ -45,7 +45,7 @@ Para el Taller, vamos a usar la versión alfa de Payara 7, que es la versión qu
 
 Elige la versión completa del servidor y descárgala, luego descomprímela en una carpeta disponible en tu entorno. Puedes ver en la siguiente imagen un ejemplo de la carpeta descomprimida:
 
-![Folder Screen](img\folderPayaraDecompressed.png)
+![Folder Screen](img/folderPayaraDecompressed.png)
 
 Ahora podemos intentar ejecutar el servidor. Para esto, necesitamos ir a la carpeta **bin** usando una terminal, localizar la carpeta **bin** e intentar ejecutar el siguiente comando:
 
@@ -55,7 +55,7 @@ asadmin start-domain
 
 Revisa el resultado en la misma ventana de la terminal.
 
-![Payara Server Startup](img\payaraServerStartup.png)
+![Payara Server Startup](img/payaraServerStartup.png)
 
 ---
 **NOTE** 
@@ -64,7 +64,7 @@ Puedes añadir las opciones **-v** para habilitar el modo verboso y ver los logs
 
 Después de iniciar el Payara Server, podemos ir a la consola de administración para revisar que el servidor esté funcionando. Para hacerlo, abre una nueva pestaña en tu navegador y coloca la siguiente URL: **localhost:4848**
 
-![Payara Server Admin console](img\payaraServerAdminConsole.png)
+![Payara Server Admin console](img/payaraServerAdminConsole.png)
 
 Para detener el Payara Server, ejecuta el siguiente comando:
 
@@ -105,11 +105,11 @@ java -jar h2.jar
 
 Después de esto, tu navegador predeterminado abrirá la consola administrativa en una nueva pestaña como esta:
 
-![H2 Administrative console](img\administrativeConsoleH2Local.png)
+![H2 Administrative console](img/administrativeConsoleH2Local.png)
 
 Para conectarte, no necesitas usar contraseña, ya que la base de datos predeterminada nunca establece una contraseña desde la configuración predeterminada. Al conectar, verás la base de datos de prueba predeterminada.
 
-![H2 Connected](img\administrativeConsoleH2Running.png)
+![H2 Connected](img/administrativeConsoleH2Running.png)
 
 Para este Taller, podemos hacer una conexión desde nuestro IDE si necesitamos acceder a las tablas resultantes de la configuración de nuestras entidades para nuestra aplicación. Podemos hacer esto con los siguientes pasos:
 
@@ -122,11 +122,11 @@ Para este Taller, podemos hacer una conexión desde nuestro IDE si necesitamos a
 
 Como ejemplo, usando IntelliJ IDEA, tengo la siguiente página de configuración para la Fuente de Datos:
 
-![IntelliJ IDE H2 Data Source](img\intelliJIdeaDataSourceForEmbeddedH2.png)
+![IntelliJ IDE H2 Data Source](img/intelliJIdeaDataSourceForEmbeddedH2.png)
 
 Luego puedo conectarme para ver las tablas:
 
-![IntelliJ IDE H2 Connection](img\intelliJIdeaConnectionDatabase.png)
+![IntelliJ IDE H2 Connection](img/intelliJIdeaConnectionDatabase.png)
 
 -----
 

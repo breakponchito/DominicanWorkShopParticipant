@@ -46,7 +46,7 @@ asadmin start-domain
 ```
 Review the result from the same terminal window.
 
-![Payara Server Startup](img\payaraServerStartup.png)
+![Payara Server Startup](img/payaraServerStartup.png)
 
 ---
 **NOTE**
@@ -57,7 +57,7 @@ need to use the option -d to enable port 9090 to attach the debugger.
 After starting the Payara Server, we can go to the admin console to review the Server up and running. To do that, open
 a new tab from your browser and put the following URL: localhost:4848
 
-![Payara Server Admin console](img\payaraServerAdminConsole.png)
+![Payara Server Admin console](img/payaraServerAdminConsole.png)
 
 To stop the Payara Server, execute the following command:
 
@@ -98,11 +98,11 @@ java -jar h2.jar
 
 After this, your default browser will open the administrative console on a new tab like this:
 
-![H2 Administrative console](img\administrativeConsoleH2Local.png)
+![H2 Administrative console](img/administrativeConsoleH2Local.png)
 
 To connect you don't need to connect with password as the default database never set a password from the default configuration. When connect you will see the default Database test
 
-![H2 Connected](img\administrativeConsoleH2Running.png)
+![H2 Connected](img/administrativeConsoleH2Running.png)
 
 For this Workshop, we can do a connection from our IDE if we need to get access to the resulting tables from our entities configuration for our application. We can do that with the following steps:
 
@@ -115,11 +115,11 @@ With the previous we are saying that we want to use the default embedded databas
 
 As an example using IntelliJ IDEA I have the following configuration page for the Data Source:
 
-![IntelliJ IDE H2 Data Source](img\intelliJIdeaDataSourceForEmbeddedH2.png)
+![IntelliJ IDE H2 Data Source](img/intelliJIdeaDataSourceForEmbeddedH2.png)
 
 Then I can connect to see tables:
 
-![IntelliJ IDE H2 Connection](img\intelliJIdeaConnectionDatabase.png)
+![IntelliJ IDE H2 Connection](img/intelliJIdeaConnectionDatabase.png)
 
 
 
