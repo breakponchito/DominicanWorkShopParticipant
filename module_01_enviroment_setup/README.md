@@ -37,7 +37,7 @@ For the Workshop we are going to use Payara 7 alpha release that is the version 
 
 Choose the full version of the server and download, then decompress on an available folder from your environment. You can see on the following image an example of the decompressed folder:
 
-![Folder Screen](img\folderPayaraDecompressed.png)
+![Folder Screen](img/folderPayaraDecompressed.png)
 
 Now we can try to run the server. To make this, we need to go to the bin folder using a terminal, locate the bin folder and try to run the following command: 
 
