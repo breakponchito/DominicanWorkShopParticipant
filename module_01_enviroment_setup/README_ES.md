@@ -1,4 +1,4 @@
-# Taller Jakarta 11 con Payara 7
+# Jakarta 11 with Payara 7 WorkShop
 
 ## Participante
 

@@ -1,0 +1,83 @@
+###########Book1 
+Title: Spring  AI in Action
+ISBN: 978-0596152657
+Author: Craig Walls
+publication Date:01/08/2024
+price: 35.00
+Description: Spring AI provides generative AI capabilities natively within the framework, 
+so you can stick with Java end-to-end. Spring AI in Action shows you how!
+
+###########Book2
+Title: Troubleshooting Java, Second Edition
+ISBN: 9781633435575
+Author: Laurentiu Spilca
+publication Date: 01/12/2024 
+price: 38.50
+Description: Searching for bugs, detangling messy legacy code, or evaluating your codebase for new features sucks up much of a developer's time. Effectively reading and understanding existing code is a true superpower! Troubleshooting Java, Second Edition teaches you to efficiently analyze and debug Java applications using time-tested tools and new AI-powered techniques.
+
+
+###########Book3
+Title:The Well-Grounded Java Developer, Second Edition
+ISBN: 9781617298875
+Author: Benjamin Evans
+price:39.19
+publication Date: 01/10/2022
+Description: Understanding Java from the JVM up gives you a solid foundation to grow your expertise 
+and take on advanced techniques for performance, concurrency, containerization, and more.
+
+
+###########Book4
+Title:Data-Oriented Programming in Java
+ISBN: 9781633436930
+Author: Chris Kiehl
+publication date: 01/09/2024
+price: 33.59
+DEscription: Simplify your Java code with data-oriented programming!
+
+###########Book5
+Title:Spring Microservices in Action, Second Edition
+ISBN: 9781617296956
+Author:John Carnell
+Price:$33.59
+publication date: 01/05/2025
+Description: By dividing large applications into separate self-contained units, Microservices are a great step toward reducing complexity and increasing flexibility. Spring Microservices in Action, Second Edition teaches you how to build microservice-based applications using Java and the Spring platform
+
+###########Book6
+Title:100 Java Mistakes and How to Avoid Them
+ISBN: 9781633437968
+Author: Tagir Valeev
+price:33.59
+publication date: 01/04/2024
+Description: Whenever you make a mistake writing Java, it’s almost guaranteed that someone else has made it before! In 100 Java Mistakes and How To Avoid Them you’ll learn about the common and the not-so-common antipatterns, errors, and tricky bits that trip up almost every Java developer.
+
+###########Book7
+Title:The Java Module System
+ISBN: 9781617294280
+Author: Nicolai Parlog
+price: 23.99
+publication date: 01/06/2024
+Description:  Java's much-awaited "Project Jigsaw" is finally here! Java 11 includes a built-in modularity framework, and The Java Module System is your guide to discovering it
+
+###########Book8
+Title:Testing Java Microservices
+ISBN: 9781617292897
+Author: Alex Soto Bueno
+price: 21.59
+publication Date: 01/08/2025
+Description:  Testing Java Microservices teaches you to implement unit and integration tests for microservice systems running on the JVM
+
+###########Book9
+Title:JUnit in Action, Third Edition
+ISBN: 9781617297045
+Author: Catalin Tudose
+price: 28.79
+publication date: 01/11/2020
+Description: JUnit is the gold standard for unit testing Java applications. Filled with powerful new features designed to automate software testing, JUnit 5 boosts your productivity and helps avoid debugging nightmares.
+
+###########Book10
+Title:Microservices Patterns
+ISBN:9781617294549
+Author: Chris Richardson
+price: 23.99
+publication Date: 01/08/2018
+Description: Microservices Patterns teaches enterprise developers and architects how to build applications with the microservice architecture

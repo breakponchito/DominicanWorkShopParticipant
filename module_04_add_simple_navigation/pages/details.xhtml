@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Details for Book</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:messages styleClass="errorMsg"/>
+    <h:form>
+        <h:panelGrid id="root" border="1" columns="1" style="margin: 10px auto; width: 100%;">
+            <h:panelGrid id="content1" border="1" columns="1" style="margin: 10px auto;  width: 600px">
+                <h:panelGroup>
+                    <h:graphicImage library="images" name="#{session.getAttribute('book').imageName}"/>
+                </h:panelGroup>
+                <h:panelGrid id="bookInfo" border="1" columns="1" style="margin: 10px auto;  width: 600px">
+                    <h:panelGroup>
+                        <h:outputText value="Title:" style="display:block;width:100px;color: white"/>
+                        <h:outputText value="#{session.getAttribute('book').title}" style="color: white"/>
+                        <h:outputText value="Description:" style="display:block;width:100px;color: white"/>
+                        <h:outputText value="#{session.getAttribute('book').description}" style="color: white"/>
+                        <h:outputText value="ISBN:" style="display:block;width:100px;color: white"/>
+                        <h:outputText value="#{session.getAttribute('book').isbn}" style="color: white"/>
+                        <h:outputText value="Publication Date:" style="display:block;width:100px;color: white"/>
+                        <h:outputText value="#{session.getAttribute('book').publicationDate}" style="color: white"/>
+                        <h:outputText value="Price:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').price}" style="color: white;"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+                <h:panelGrid id="authorInfo" border="1" columns="1" style="margin: 10px auto;  width: 600px">
+                    <h:panelGroup>
+                        <h:outputText value="Author Name:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.name}" style="color: white;"/>
+                        <h:outputText value="Author Age:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.age}" style="color: white;"/>
+                        <h:outputText value="Street:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.address.street}" style="color: white;"/>
+                        <h:outputText value="City:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.address.city}" style="color: white;"/>
+                        <h:outputText value="State:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.address.state}" style="color: white;"/>
+                        <h:outputText value="Zip:" style="display:block;width:100px;color: white;"/>
+                        <h:outputText value="#{session.getAttribute('book').author.address.zip}" style="color: white;"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:panelGrid>
+        </h:panelGrid>
+    </h:form>
+</h:body>
+</html>
