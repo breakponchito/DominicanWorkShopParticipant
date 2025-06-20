@@ -1,6 +1,6 @@
 # Jakarta 11 with Payara 7 WorkShop
 
-for spanish instructions, please go to the following page
+for spanish instructions, please go to the following page: [Aqui](README_ES.md)
 
 * [Module 1: Environment Setup](module_01_enviroment_setup/README.md)
 * [Module 2: Start with book catalog app](module_02_start_with_book_catalog_application/README.md)
