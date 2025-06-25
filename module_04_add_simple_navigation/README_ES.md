@@ -20,6 +20,8 @@ Para empezar, necesitamos añadir la estructura de carpetas para la aplicación 
 - **web.xml** (aquí configuraremos el Servlet JSF para resolver nuestras vistas y el ciclo de vida de los componentes JSF)
 - **beans.xml** (esto es para trabajar con beans CDI; por defecto, el método para iniciar los beans CDI es el modo anotado)
 
+![Structure of Folder](img/structureOfFolderWebApp.png)
+
 Podemos empezar a configurar nuestra aplicación para usar JSF. Para hacerlo, necesitamos declarar el Servlet que va a resolver nuestras vistas. Debes declarar el siguiente Servlet en tu archivo `web.xml`:
 
 ```xml
@@ -55,6 +57,7 @@ mvn clean install package
 
 Despliega la aplicación en el servidor para ver si funciona correctamente. Ve al punto final predeterminado proporcionado por el proyecto Jakarta Starter para ver si la aplicación se está ejecutando, aquí un ejemplo:
 
+![Running Hello Application](img/runningHelloEndpoint.png)
 -----
 
 #### Añadiendo página de Menú para la aplicación
@@ -68,6 +71,8 @@ Para crear la página de Menú para la aplicación, necesitamos incluir algunos 
 Copia las imágenes ubicadas en la carpeta `imagesWebApp` de este módulo a una carpeta dentro de la carpeta `resources` de tu aplicación. Haz lo mismo para el archivo de estilo ubicado en la carpeta `css` de este módulo a una carpeta dentro de tu carpeta `resources`. Finalmente, copia el archivo `menu.xhtml` a la carpeta `webapp`. Construye tu aplicación y despliégala de nuevo.
 
 Después de desplegar la aplicación, abre la siguiente URL: `http://localhost:8080/jakartaee-book-store/menu.xhtml`
+
+![Menu App](img/menuApp.png)
 
 -----
 
@@ -103,7 +108,13 @@ Revisa el contenido de la clase. Las partes importantes para que este bean esté
 
 Si no tienes datos en tu tabla, abre el **módulo 2** y ve a la carpeta `sql`, abre el archivo `inserTwoTables.sql` y ejecuta las consultas de inserción, añadiendo primero los datos del **Autor** y luego los datos del **Libro**. Aquí un ejemplo:
 
+![Inserting Data](img/insertingData.png)
+
 Reconstruye la aplicación y despliégala. Ahora abre la página de menú y selecciona la opción **Catalog**:
+
+![Menu App](img/menuApp.png)
+
+![Catalog View](img/catalogView.png)
 
 -----
 
@@ -139,6 +150,8 @@ Aquí está el método a añadir:
 ```
 
 Actualiza la vista del catálogo para llamar a este nuevo método, después construye y despliega la aplicación. Verás el mismo resultado para la vista del catálogo.
+
+![Catalog View](img/catalogView.png)
 
 -----
 
@@ -187,6 +200,8 @@ Para `details.xhtml`, edita el archivo y agrega la acción al `commandButton` en
 
 Construye tu aplicación, despliégala y prueba la página de detalles. Aquí tienes un ejemplo:
 
+![Details Page](img/detailsPage.png)
+
 -----
 
 #### Creando página de administración para el Catálogo
@@ -200,6 +215,12 @@ Esta es la última parte del módulo para integrar más operaciones para el cat�
 Copia los siguientes archivos a tu aplicación en la carpeta `webapp`: `catalogAdmin.xhtml`, `editBook.xhtml` e `insertBook.xhtml`.
 
 Necesitarás clases adicionales para tu proyecto que también se proporcionan en las carpetas: `converter`, `service`. Copia esos archivos en un paquete específico de tu proyecto y luego construye y despliega tu aplicación; verás más funcionalidad en tu aplicación. Aquí los ejemplos:
+
+![Admin View](img/adminView.png)
+
+![Update View](img/updateView.png)
+
+![insertView](img/insertView.png)
 
 Juega con la aplicación para interactuar con toda la funcionalidad.
 

@@ -8,6 +8,8 @@
 
 Vamos a empezar a crear nuestra aplicación base usando el **Jakarta EE starter**. Esta es una herramienta proporcionada por la comunidad para configurar y crear tu aplicación base para diferentes versiones de Jakarta EE. En este caso, necesitamos crear una aplicación base para nuestro catálogo de libros. Ve al siguiente enlace y crea la aplicación usando un `artifact id` relacionado con un catálogo o tienda de libros. Aquí está el enlace de Jakarta Starter: **[Jakarta Starter](https://start.jakarta.ee/)**
 
+![Jakarta EE Starter](img/jakartaEEStarter.png)
+
 -----
 
 **NOTA**
@@ -24,13 +26,19 @@ En este momento, solo el tiempo de ejecución de Open Liberty está disponible p
 
 Después de eso, puedes descomprimirlo en cualquier ubicación de tu entorno local. Aquí tienes un ejemplo de la estructura de las carpetas:
 
+![Jakarta Starter App](img/folderStarterApp.png)
+
 Puedes abrirlo con tu IDE preferido. En mi caso, lo abrí con IntelliJ IDEA:
+
+![Jakarta App with IDEA](img/appOpenedWithIDEA.png)
 
 Como puedes ver en los detalles de la aplicación, puedes identificar el archivo `pom.xml` que indica que esta aplicación está basada en Maven. Por eso es importante instalar los requisitos de software indicados en el primer módulo.
 
 #### Configurando pom.xml
 
 Para avanzar con nuestro Taller, necesitamos proporcionar la configuración correcta de nuestro archivo `pom.xml`. Puedes revisar el archivo `pom` predeterminado proporcionado por Jakarta Starter, aquí el ejemplo:
+
+![Default pom configuration](img/pomFileStructure.png)
 
 Como construiremos una aplicación web, necesitamos actualizar nuestra configuración de `pom` para indicar que vamos a usar el perfil web.
 
@@ -59,6 +67,8 @@ Ahora es el momento de modelar nuestra aplicación. Para esto, necesitamos usar 
 #### **Tarea**
 
 Ahora es el momento de una nueva tarea. En esta tarea, tu trabajo será crear una clase basada en el siguiente modelo:
+
+![Book Entity Model](img/bookModel.png)
 
 Guarda la clase de entidad en un paquete diferente al predeterminado proporcionado por la aplicación Jakarta Starter.
 
@@ -112,11 +122,25 @@ Para desplegar una aplicación, tenemos dos formas que podemos elegir:
 Para desplegar usando la consola de administración, debemos ir a la siguiente URL: `localhost:4848`
 Esto abrirá la consola de administración de Payara, aquí un ejemplo:
 
+![Payara Admin Console](img/payaraAdminConsole.png)
+
 Luego, debes ir a la sección **Applications** y seleccionar la opción **deploy** para elegir el archivo `.war` que deseas desplegar en el servidor de aplicaciones. Aquí tienes un ejemplo:
+
+![Admin Console Application Option](img/payaraApplicationsDeploy.png)
+
+![Admin Console Application Deploy File](img/payaraApplicationDeployFile.png)
 
 Luego haz clic en la opción **OK** para proceder con el despliegue. Una vez desplegado, verás la siguiente página:
 
+![Admin Console Deploy Finished](img/payaraDeployFinished.png)
+
 Finalmente, haz clic en la aplicación y selecciona **View Endpoints** para elegir el siguiente punto final que se proporciona desde la fuente predeterminada de la aplicación Jakarta Starter: `/jakartaee-book-store/rest/hello` o ábrelo con la URL completa: `localhost:8080/jakartaee-book-store/rest/hello`
+
+![Payara Application Info](img/payaraApplicationDeployInfo.png)
+
+![Payara Application View Endpoints](img/payaraApplicationViewEndpoints.png)
+
+![Hello Endpoint](img/callingHelloEndpoint.png)
 
 ##### Usando la línea de comandos
 
@@ -128,7 +152,11 @@ asadmin deploy pathofyourwar/name.war
 
 Espera unos segundos y luego revisa los logs en la terminal, este es un ejemplo:
 
+![Deploy Command](img/deployCommand.png)
+
 El mensaje **Command deploy executed successfully** indica que la aplicación ahora está lista para usar. Abre una pestaña del navegador y ve a la siguiente URL: `localhost:8080/jakartaee-book-store/rest/hello`
+
+![Hello World](img/helloWorldFromBrowser.png)
 
 -----
 
@@ -153,7 +181,9 @@ Lo que necesitamos hacer es simplemente abrir la clase `HelloWorldResource` y ag
 
 Con esta línea, lo que vamos a lograr es la creación automática de tablas y secuencias en la base de datos. Podemos verificar eso con nuestro cliente de BD, desde IntelliJ IDEA u otra herramienta como NetBeans. Aquí hay algunos ejemplos:
 
-## 
+![IntelliJ IDEA Database Viewer](img/intelliJDatabaseViewer.png)
+
+![NetBeans Database Viewer](img/netBeansDatabaseViewer.png)
 
 #### **Tarea**
 
@@ -163,7 +193,11 @@ Declara la inyección del **PersistenceContext** en la clase `HelloWorldResource
 
 Una vez que la aplicación esté disponible, desde una consola de consultas usando IntelliJ IDEA u otra herramienta, conéctate a la base de datos y ejecuta la consulta que se te proporcionó. Aquí hay algunos ejemplos:
 
+![Insert execution from IntelliJ IDEA](img/intelliJInsertExecution.png)
+
 Verifica los datos añadidos en la tabla.
+
+![Inserted rows](img/insertedRows.png)
 
 -----
 
@@ -202,6 +236,8 @@ Vamos a usar JUnit 5 para crear nuestra prueba de integración. Para simplificar
 
 Copia ese archivo y colócalo en el lugar correspondiente para los archivos de prueba unitaria en tu proyecto. En mi caso, se ve así:
 
+![Structure of folder for Unit Test](img/structureOfFoldersTest.png)
+
 Otra cosa que necesitamos editar es el archivo `persistence.xml` para declarar una unidad de persistencia adicional para las pruebas de integración. Edita tu archivo y agrega el siguiente contenido:
 
 ```xml
@@ -218,6 +254,8 @@ Otra cosa que necesitamos editar es el archivo `persistence.xml` para declarar u
 ```
 
 Mi archivo `persistence.xml` final se ve así:
+
+![Edit Persistence for Unit Testing](img/persistenceWithAdditionalPersistenceUnit.png)
 
 -----
 
@@ -241,6 +279,8 @@ mvn test
 
 Verás una salida como esta:
 
+![Result of test execution](img/resultOfTestExecution.png)
+
 ### Introducción a los Records
 
 Ahora es el momento de hablar sobre los **Java Records** porque definiremos un Record para gestionar un subconjunto de datos de nuestra primera entidad. La idea de esto es ver el Record como un DTO en los casos en que no necesites la información completa de la entidad.
@@ -260,6 +300,8 @@ Recuerda que un Record es un objeto **inmutable**, lo que significa que una vez 
 Si deseas obtener más información sobre los Records, consulta el siguiente enlace: **[Java Records](https://docs.oracle.com/en/java/javase/17/language/records.html)**
 
 Revisa la entidad actual para `Book`:
+
+![Book Model](img/bookModel.png)
 
 De esta definición, probablemente podamos definir un DTO para obtener un subconjunto de la información con algún propósito.
 
@@ -347,6 +389,8 @@ public record Address(String street, String city, String state, String zip) {
 #### **Tarea**
 
 Ahora definiremos los nuevos componentes para usar **Embeddable**. Para esto, necesitamos crear el siguiente modelo:
+
+![Model Complete](img/diagramModelComplete.png)
 
 Para reducir el tiempo, he proporcionado los recursos para este modelo en las fuentes de este módulo. Por favor, copia el contenido de los archivos y muévelos a tu proyecto.
 
@@ -439,6 +483,8 @@ mvn clean install package
 ```
 
 Revisa los resultados de la prueba unitaria. Por mi parte, este es mi resultado:
+
+![Results for two unit tests](img/resultsTwoUnitTests.png)
 
 -----
 
@@ -542,6 +588,8 @@ o
 ```console
 mvn clean install package
 ```
+
+![Results for three unit tests](img/resultsThreeUnitTests.png)
 
 -----
 

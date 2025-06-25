@@ -207,7 +207,7 @@ This is the last part of the module to integrate more operations for the catalog
 
 Copy the following files to your application into the webapp folder: catalogAdmin.xhtml, editBook.xhtml and insertBook.xhtml
 
-You will need additional classes to your project that are also provided on the folders: converter, service. Copy those files on a specific package on your project and then build and deploy your application, you will see more functionality to your application. Here the examples:
+You will need additional classes to your project that are also provided on the folders: converter, service. Copy those files on a specific package on your project and then build and deploy your application, you will see more functionality to your application. Here are the examples:
 
 ![Admin View](img/adminView.png)
 
