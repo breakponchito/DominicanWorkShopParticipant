@@ -8,21 +8,21 @@ Ahora es el momento de añadir vistas para nuestro catálogo. Hasta ahora tenemo
 
 - Jakarta Servlets (versión 6.1 para Jakarta 11)
 - Jakarta Pages (versión 4.0 para Jakarta 11)
-- Jakarta JSF (versión 4.1 para Jakarta 11)
+- Jakarta Faces (versión 4.1 para Jakarta 11)
 - Jakarta MVC (versión 3.0, no forma parte de Jakarta 11, especificación independiente)
 
-En nuestro caso, nos centraremos en **JSF** para integrar nuestra vista y que interactúe con nuestros modelos.
+En nuestro caso, nos centraremos en **Jakarta Faces** para integrar nuestra vista y que interactúe con nuestros modelos.
 
-#### Configurar la aplicación para JSF
+#### Configurar la aplicación para Jakarta Faces
 
 Para empezar, necesitamos añadir la estructura de carpetas para la aplicación web y también incluir algunos archivos de configuración. Aquí está la lista de archivos que necesitamos incluir en nuestra aplicación y un ejemplo de la estructura de carpetas:
 
-- **web.xml** (aquí configuraremos el Servlet JSF para resolver nuestras vistas y el ciclo de vida de los componentes JSF)
+- **web.xml** (aquí configuraremos el Servlet de Jakarta Faces para resolver nuestras vistas y el ciclo de vida de los componentes de Jakarta Faces)
 - **beans.xml** (esto es para trabajar con beans CDI; por defecto, el método para iniciar los beans CDI es el modo anotado)
 
 ![Structure of Folder](img/structureOfFolderWebApp.png)
 
-Podemos empezar a configurar nuestra aplicación para usar JSF. Para hacerlo, necesitamos declarar el Servlet que va a resolver nuestras vistas. Debes declarar el siguiente Servlet en tu archivo `web.xml`:
+Podemos empezar a configurar nuestra aplicación para usar Jakarta Faces. Para hacerlo, necesitamos declarar el Servlet que va a resolver nuestras vistas. Debes declarar el siguiente Servlet en tu archivo `web.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -120,7 +120,7 @@ Reconstruye la aplicación y despliégala. Ahora abre la página de menú y sele
 
 #### Integrar el Catálogo con Records
 
-Si recuerdas el módulo 2 cuando hablamos del soporte de Records. Ahora podemos integrar los Records usando **EL (Expression Language)** para JSF. Para la siguiente tarea, crearemos un nuevo método en nuestra clase de servicio para proporcionar los datos con una lista de Records. Básicamente, la idea del Record es usarlo como un DTO de los datos para mostrar en alguna vista. En este caso, no necesitamos toda la información del libro para mostrarla en la vista.
+Si recuerdas el módulo 2 cuando hablamos del soporte de Records. Ahora podemos integrar los Records usando **EL (Expression Language)** para Jakarta Faces. Para la siguiente tarea, crearemos un nuevo método en nuestra clase de servicio para proporcionar los datos con una lista de Records. Básicamente, la idea del Record es usarlo como un DTO de los datos para mostrar en alguna vista. En este caso, no necesitamos toda la información del libro para mostrarla en la vista.
 
 -----
 

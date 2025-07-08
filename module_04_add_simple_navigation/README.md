@@ -8,21 +8,21 @@ Now is the time to add views for our catalog, until now we have the models we wa
 
 - Jakarta Servlets (version 6.1 for Jakarta 11)
 - Jakarta Pages (version 4.0 for Jakarta 11)
-- Jakarta JSF (version 4.1 for Jakarta 11)
+- Jakarta Faces (version 4.1 for Jakarta 11)
 - Jakarta MVC (version 3.0, not part of Jakarta 11, stand-alone specification)
 
-In our case, we will focus on JSF to integrate our view to interact with our models.
+In our case, we will focus on Jakarta Faces to integrate our view to interact with our models.
 
-#### Configure the application for JSF
+#### Configure the application for Jakarta Faces
 
 To start, we need to add the structure of folder for web application and also include some configuration files. Here is the list of files that we need to include in our application and an example of the structure of folder to have:
 
-- web.xml (here we will configure the JSF Servlet to resolve our views and the life cycle for JSF components)
+- web.xml (here we will configure the Faces Servlet to resolve our views and the life cycle for Faces components)
 - beans.xml (this is to work with CDI beans, by default, the method to start CDI beans is the mode annotated)
 
 ![Structure of Folder](img/structureOfFolderWebApp.png)
 
-We can start to configure our application to use JSF. To make that, we need to declare the Servlet that is going to resolve our views. You need to declare the following Servlet on your web.xml file:
+We can start to configure our application to use Jakarta Faces. To make that, we need to declare the Servlet that is going to resolve our views. You need to declare the following Servlet on your web.xml file:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -118,7 +118,7 @@ Rebuild the application and deploy, now open the menu page and select the Catalo
 
 #### Integrate Catalog with Records
 
-If you remember module 2 when we talked about the Records support. Now we can integrate the Records using the EL for JSF. For the following task, we will create a new method on our service class to provide the data with a List of Records. Basically, the idea of the record is to use as a DTO of the data to show on some view. In this case, we don't need the full information of the book to be shown on the view.
+If you remember module 2 when we talked about the Records support. Now we can integrate the Records using the EL for Jakarta Faces. For the following task, we will create a new method on our service class to provide the data with a List of Records. Basically, the idea of the record is to use as a DTO of the data to show on some view. In this case, we don't need the full information of the book to be shown on the view.
 
 -----
 #### **Task**
