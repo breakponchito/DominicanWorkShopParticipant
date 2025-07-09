@@ -23,7 +23,7 @@ The base implementation of this specification provides a managed version of the 
 
 By adding the implementation of this, we are gaining a lot of benefits, some of them are the following:
 
-- Reduced boilerplate code and complexity: With this layer of managed services now is straightforward to use and implement on our daily basis, inject the resources you need and use on your specific component.
+- Reduced boilerplate code and complexity: With this layer of managed services now is straightforward to use and implement on our daily basis, inject the resources when you need and use on your specific components.
 - Compatibility with the Java SE Concurrency: As we said this spec is on top of the Java SE implementation providing the most recent additions for Concurrence, we will see how to use Virtual Threads more later.
 - Improved performance and Responsiveness: By offloading long-running tasks to background threads, applications can remain responsive to user interactions.
 - Better resource utilization: Efficiently uses available CPU cores by executing multiple tasks concurrently.
@@ -52,10 +52,15 @@ Let's start with the ManagedExecutorService. This will help us to execute tasks 
     private ManagedExecutorService managedExecutorService;
 ```
 
+---
+**NOTE**
+For Concurrency 3.1 now you can use the annotation @Inject to get the resources
+---
+
 then we can use that executor to send the work to new threads, look at the following example:
 
 ```java
-    @Resource
+    @Inject
     private ManagedExecutorService managedExecutorService;
 
     @GET
@@ -106,7 +111,98 @@ to print the JNDI resource name requested. This is automatically provided by the
         return "Completed with result " + result ;
     }
 ```
-The Next component is the ManagedThreadFactory. This will provide the ability to create threads managed by the container. Also the context of the container is propagated to the thread executing the task.
+The Next component is the ManagedThreadFactory. This will provide the ability to create threads managed by the container. Also, the context of the container is propagated to the thread executing the task. To use, you need to inject the resource on your component like this:
+
+```java
+    @Inject 
+    private ManagedThreadFactory managedThreadFactory;
+```
+Then we can use the ManagedThreadFactory to execute a task:
+
+```java
+    @GET
+    @Path("threadFactory")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String processWithThreadFactory() throws ExecutionException, InterruptedException {
+        Thread t  = managedThreadFactory.newThread(() -> {
+            System.out.println("ManagedThread executing");
+        });
+        
+        t.start();
+        return "Completed";
+    }
+```
+
+Finally, the ManagedScheduledExecutorService. This will help us to define a task to be executed at specified and periodic times. To use, you can Inject the default resource from the server:
+
+```java
+    @Inject
+    private ManagedScheduledExecutorService managedScheduledExecutorService;
+```
+
+Then we can use the ManagedScheduleExecutorService. The first example show how to send a task at a specified time, after a delay:
+
+```java
+    @GET
+    @Path("/scheduleTaskForGivenDelay")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String processWithScheduledExecutorService() throws ExecutionException, InterruptedException {
+        managedScheduledExecutorService.schedule(() -> System.out.println("ScheduledExecutor executing"), 10, TimeUnit.SECONDS);
+        return "Scheduled task";
+    }
+    
+    @GET
+    @Path("/scheduleTaskForPeriodicTime")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String scheduleServiceAllTheTime() throws ExecutionException, InterruptedException {
+        managedScheduledExecutorService.scheduleAtFixedRate(() -> System.out.println("ScheduledExecutor with rate"), 3, 1, TimeUnit.SECONDS);
+        managedScheduledExecutorService.scheduleWithFixedDelay(() -> System.out.println("ScheduledExecutor with delay"), 2, 2, TimeUnit.SECONDS);
+        return "Scheduled task";
+    }
+```
+
+The previous two examples show how you can create a task to start at a specified time, and the second endpoint shows how you can execute a task for a periodic time. The method scheduleAtFixedRate submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given period; that is, executions will commence after initialDelay, then initialDelay + period, then initialDelay + 2 * period, and so on. The method scheduleWithFixedDelay submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given delay between the termination of one execution and the commencement of the next.
+
+Other implementations that we need to mention are the ForkAnJoinPool and the CronTrigger configuration. First, start with CronTrigger as the name suggests this is used to configure the cron notation on a class to be used as a configuration to execute periodic tasks. With the following example, you will see how to use it if you want to see the reference of the API to understand the details for the cron notation review the following page: [CronTrigger API](https://jakarta.ee/specifications/concurrency/3.1/apidocs/jakarta.concurrency/jakarta/enterprise/concurrent/crontrigger)
+
+To use this CronTrigger configuration you need to combine with the ManagedScheduleExecutorService, here the example:
+
+```java
+    @Inject
+    ManagedScheduledExecutorService managedScheduledExecutorService;
+```
+
+Then you can use the Trigger interface to save the reference of the CronTrigger object to be used with the ManagedScheduleExecutorService on the method schedule. Here the example:
+
+```java
+    @GET
+    @Path("cronTrigger")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getText() throws InterruptedException {
+        AtomicInteger numberExecution = new AtomicInteger();
+        ZoneId santDomingo = ZoneId.of("America/America/Santo_Domingo");
+        Trigger trigger = new CronTrigger("* * * * * *", santDomingo);
+        ScheduledFuture feature = managedScheduledExecutorService.schedule(() -> {
+            numberExecution.getAndIncrement();
+            System.out.println("Cron Trigger running");
+        }, trigger);
+        Thread.sleep(10000);
+        feature.cancel(true);
+        return "CronTrigger Submitted:"+numberExecution.get();
+    }
+```
+
+From the previous example, we can see that we configured a CronTrigger to be executed every second and the task will use the trigger as the configuration. The task will increment a number and will print a message. Then we controlled the execution with a delay of 10,000 milliseconds to permit the task work and print and increment the number 10 times. When finished, we can get the number incremented with value of 10.
+
+
+-----
+#### **Task**
+
+With all of this information now is your turn to experiment. That is why your job for now is to copy each of the examples described here and use in your own implementation. Everything is permitted you need to experiment.
+
+-----
+
+
 
 
 #### Define your custom resource
