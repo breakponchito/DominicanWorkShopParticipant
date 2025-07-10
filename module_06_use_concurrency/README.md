@@ -163,7 +163,7 @@ Then we can use the ManagedScheduleExecutorService. The first example show how t
 
 The previous two examples show how you can create a task to start at a specified time, and the second endpoint shows how you can execute a task for a periodic time. The method scheduleAtFixedRate submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given period; that is, executions will commence after initialDelay, then initialDelay + period, then initialDelay + 2 * period, and so on. The method scheduleWithFixedDelay submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given delay between the termination of one execution and the commencement of the next.
 
-Other implementations that we need to mention are the ForkAnJoinPool and the CronTrigger configuration. First, start with CronTrigger as the name suggests this is used to configure the cron notation on a class to be used as a configuration to execute periodic tasks. With the following example, you will see how to use it if you want to see the reference of the API to understand the details for the cron notation review the following page: [CronTrigger API](https://jakarta.ee/specifications/concurrency/3.1/apidocs/jakarta.concurrency/jakarta/enterprise/concurrent/crontrigger)
+Other implementations that we need to mention are the ForkAnJoinPool and the CronTrigger configuration. First, start with CronTrigger as the name suggests this is used to configure the cron notation on a class to be used as a configuration to execute periodic tasks. With the following example, you will see how to use it. If you want to see the reference of the API to understand the details for the cron notation, review the following page: [CronTrigger API](https://jakarta.ee/specifications/concurrency/3.1/apidocs/jakarta.concurrency/jakarta/enterprise/concurrent/crontrigger)
 
 To use this CronTrigger configuration you need to combine with the ManagedScheduleExecutorService, here the example:
 
@@ -194,18 +194,144 @@ Then you can use the Trigger interface to save the reference of the CronTrigger 
 
 From the previous example, we can see that we configured a CronTrigger to be executed every second and the task will use the trigger as the configuration. The task will increment a number and will print a message. Then we controlled the execution with a delay of 10,000 milliseconds to permit the task work and print and increment the number 10 times. When finished, we can get the number incremented with value of 10.
 
+Now is the time for the ForkAndJoinPool implementation. The ForkAndJoinPool is useful when you have a task that needs to process a bunch of data, and you want to divide the work (divide and conquer) in atomic units to be processed with the number of available processors from your environment. This implies to make parallel work and in some momento join all the results. For this, you need to implementa a ForkJoinTask of the type RecursiveAction without returning results or RecursiveTask to return results. In the following example, you will see how to use.
+
+We need to use the ManagedThreadFactory to provide to the ForkJoinPool the source of the threads to be used by the implementation:
+
+```java
+    @Inject
+    ManagedThreadFactory managedThreadFactory;
+```
+Then we can declare the endpoint to call the ForkJoinPool, as following:
+
+```java
+    @GET
+    @Path("forkjoin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String forkJoinWorkerThreadExecution() throws InterruptedException, ExecutionException {
+        final long[] numbers = LongStream.rangeClosed(1, 1_000_000).toArray();
+        ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), managedThreadFactory, null, false);
+        ForkJoinTask<Long> task = new ForkJoinSum(numbers);
+        ForkJoinTask<Long> total = pool.submit(task);
+        Long t = total.get();
+        String message = String.format("Counting numbers total:%d", t);
+        pool.shutdown();
+        return message;
+    }
+```
+
+We need the ForkJoinSum implementation, here is the code:
+
+```java
+    class ForkJoinSum  extends RecursiveTask<Long> {
+
+        public static final long THRESHOLD = 10_000;
+
+        private final long[] numbers;
+        private final int start;
+        private final int end;
+
+        public ForkJoinSum(long[] numbers) {
+            this(numbers, 0, numbers.length);
+        }
+
+        private ForkJoinSum(long[] numbers, int start, int end) {
+            this.numbers = numbers;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected Long compute() {
+            System.out.println("thread name:"+Thread.currentThread().getName());
+            int length = end - start;
+            if (length <= THRESHOLD) {
+                return computeSequentially();
+            }
+            ForkJoinSum leftTask = new ForkJoinSum(numbers, start, start + length / 2);
+            leftTask.fork();
+            ForkJoinSum rightTask = new ForkJoinSum(numbers, start + length / 2, end);
+            Long rightResult = rightTask.compute();
+            Long leftResult = leftTask.join();
+            return leftResult + rightResult;
+        }
+
+        private long computeSequentially() {
+            long sum = 0;
+            for (int i = start; i < end; i++) {
+                sum += numbers[i];
+            }
+            return sum;
+        }
+    }
+```
+
+From the example, we see that was created an array of one million of long numbers added sequentially. Then it is created the ForkJoinPool using the available processors from the system, our ManagedThreadFactory instance and another two values indicated as null and false. Then we need to use our implementation class for the RecursiveTask that is going to return the results after finishing. Finally, we start the execution by calling the method submit from the pool created. To get the results, we call the method get to wait until all the execution finish, after that it is printed on the screen the result.
+
+Continue with new additions for Jakarta Concurrency 3.1, now we have the annotation @Schedule that can execute in combination with the @Asynchronous annotation a task for a specified schedule time using cron notation or with custom properties for time. You can indicate this on a method from a bean. Then you can inject and start execution at the moment you desire. The following is the example of the class with the method for a Schedule configuration:
+
+```java
+    @RequestScoped
+    public class ScheduledTask {
+
+    @Inject
+    private ManagedScheduledExecutorService scheduledExecutorService;
+
+    @Asynchronous(runAt = {
+            @Schedule(cron = "*/3 * * * * *")
+    })
+    public void scheduledTask() {
+        System.out.println("Scheduled Task");
+    }
+}
+```
+
+Then you need to inject the bean in the component you need, where the execution of the task will start.
+
+```java
+    @Inject
+    private ScheduledTask scheduledTask;
+    
+    @GET
+    @Path("asynchronous")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsynchronousWorkerThreadExecution() throws InterruptedException, ExecutionException {
+        scheduledTask.scheduledTask();
+        return "asynchronous";
+    }
+```
+
+Here we are starting the execution of the schedule task when calling the method sheduledTask().
+
+The last topic from this section is the addition of a custom way to integrate the contextual information named Contextual Flows (Reactive Streams); 
+with this, the idea is to enable a way to use the contextual information in the context of reactive implementations. While creating a full example of this topic will imply a lot of effort. For now, we just show in the following code how we can achieve that with the current API:
+
+```java
+@ApplicationScoped
+public class ReactiveService {
+
+    @Inject
+    private ContextService contextService;
+
+    public Flow.Subscriber<String> createContextualSubscriber(Flow.Subscriber<String> delegate) {       
+        return contextService.contextualSubscriber(delegate);
+    }
+}
+```
 
 -----
 #### **Task**
 
-With all of this information now is your turn to experiment. That is why your job for now is to copy each of the examples described here and use in your own implementation. Everything is permitted you need to experiment.
+With all of this information now is your turn to experiment. That is why your job for now is to copy each of the examples described here and use in your own implementation. Remember that the last topic is showing a partial implementation of how the Contextual Flows can work, and that is why it is not enough to run reactive streams on this example.
 
 -----
 
-
-
-
 #### Define your custom resource
+
+With Payara, you can create your custom resources by using Admin Console or with Admin commands. In the following examples, you will see how to do that within Payara Server
+
+##### Context Service
+
 
 #### What is Virtual Threads?
 
