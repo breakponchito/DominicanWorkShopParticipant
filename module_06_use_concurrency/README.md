@@ -328,13 +328,140 @@ With all of this information now is your turn to experiment. That is why your jo
 
 #### Define your custom resource
 
-With Payara, you can create your custom resources by using Admin Console or with Admin commands. In the following examples, you will see how to do that within Payara Server
+With Payara, you can create your custom resources by using Admin Console or with Admin commands. In the following examples, you will see how to do that within Payara Server.
 
 ##### Context Service
 
+You can add a custom resource using Admin Console or by Admin commands. If you want to add the custom resource for ContextService then you need to go to option Menu ***Resources -> Concurrent Resources -> Context Service*** on the left side of the Payara Server Home:
+
+![Resources Menu](img/resourcesMenu.png)
+
+Once selected, you will see the options to create custom Context Service:
+
+![create Context Service](img/optionsContextService.png)
+
+Click in option New and add the following name: concurrent/ContextFromConsole
+
+Finally, click ok to save the new resource
+
+![create Custom Context Service](img/createCustomContextService.png)
+
+Click on save, and that's it, new resource saves it. You can do the same action by using the following command
+
+```shell
+asadmin create-context-service concurrent/Context1
+```
+
+To verify from command the available resource use the following:
+
+```shell
+asadmin list-context-services
+```
+to update the resource you need first to get to see which properties to change with the following command:
+
+```shell
+asadmin get resources.context-service.concurrent/Context1.*
+```
+
+then you can set a new value for one of them:
+
+```shell
+asadmin set resources.context-service.concurrent/Context1.deployment-order=120
+```
+
+if you need to delete the resource, you can do by the following command:
+
+```shell
+asadmin delete-context-service concurrent/Context1
+```
+
+As you can see, it is easy to interact with the two modes with the resources. Finally, if you need to use in your code the new resource you need to inject and locate with specific JNDI name as follows:
+
+```java
+    @Resource(name = "concurrent/ContextFromConsole")
+    private ContextService contextService;
+```
+
+that is enough to inject the resource and use your code.
+
+##### Managed Thread Factories, Managed Executor Service and Scheduled Executor Services
+
+As we can see with ContextService, we can do the same for the other categories of the resources. Open the option you need from the console and create the resource. The recommendation is to use a name corresponding to the resource to easily identify:
+
+![Other options expanded](img/otherOptionsExpanded.png)
+
+![New Managed Thread Factory](img/newManagedThreadFactory.png)
+
+![New Managed Executor Service](img/newManagedExecutorService.png)
+
+![New Managed Schedule Executor Service](img/managedScheduleExecutorService.png)
+
+To summary the commands to interact, I have the following table:
+
+Managed Thread Factory commands:
+
+| Command | Action                                                                   |
+| ------- |--------------------------------------------------------------------------|
+|asadmin> create-managed-thread-factory concurrent/Factory1     | Creates a new Managed Thread Factory Resource                            |
+|asadmin> list-managed-thread-factories| List the available Managed Thread Factories                              |
+|asdmin> get resources.managed-thread-factory.{resource-JNDI-name}.*| Get the Managed Thread Factory properties from the specified JNDI name   |
+|asdmin> set resources.managed-thread-factory.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Thread Factory using JNDI name |
+|asadmin> delete-managed-thread-factory concurrent/Factory1| Deletes the specified Managed Thread Factory with the JNDI name          |
+
+Managed Executor Services commands:
+
+| Command | Action                                                                   |
+| ------- |--------------------------------------------------------------------------|
+|asadmin> create-managed-executor-service concurrent/Executor1     | Creates a new Managed Executor Service Resource                          |
+|asadmin> list-managed-executor-services| List the available Managed Executor Services                             |
+|asdmin> get resources.managed-executor-service.{resource-JNDI-name}.*| Get the Managed Executor Service properties from the specified JNDI name |
+|asdmin>  set resources.managed-executor-service.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Executor Service using JNDI name |
+|asadmin> delete-managed-executor-service concurrent/Executor1| Deletes the specified Managed Executor Service with the JNDI name          |
+
+Managed Scheduled Executor Services:
+
+| Command | Action                                                                             |
+| ------- |------------------------------------------------------------------------------------|
+|asadmin> create-managed-scheduled-executor-service concurrent/ScheduledExecutor1    | Creates a new Managed Scheduled Executor Service Resource                          |
+|asadmin> list-managed-scheduled-executor-services| List the available Managed Scheduled Executor Service                              |
+|asdmin>get resources.managed-scheduled-executor-service.{resource-JNDI-name}.*| Get the Managed Scheduled Executor Service properties from the specified JNDI name |
+|asdmin> set resources.managed-scheduled-executor-service.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Scheduled Executor Service using JNDI name         |
+|asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1| Deletes the specified Managed Scheduled Executor Service with the JNDI name                  |
+
+To inject each of them, use resource annotation like follows:
+
+```java
+    @Resource(name = "concurrent/Factory1")
+    private ManagedThreadFactory managedThreadFactory1;
+```
+
+```java
+    @Resource(name = "concurrent/Executor1")
+    private ManagedExecutorService managedExecutorService1;
+```
+
+```java
+    @Resource(name = "concurrent/ScheduledExecutor1")
+    private ManagedScheduledExecutorService managedScheduledExecutorService1;
+```
+
+
+-----
+#### **Task**
+Use the commands to create custom resources for each of them. Use the custom resources instead of the default ones.
+-----
 
 #### What is Virtual Threads?
 
+A Java Virtual Thread is a lightweight, user-mode thread introduced in Java 21 as part of Project Loom. Unlike traditional platform threads (which are OS threads), virtual threads are managed by the Java Virtual Machine (JVM) and do not map directly to operating system threads. This allows for a much larger number of concurrent tasks with significantly less overhead.
+
+-Lightweight
+-Managed by JVM
+-Non-blocking I/O
+-Easy to Use
+-Structured Concurrency
+-Improved Throughput
+
 #### How to use with Jakarta 11?
 
-
+As you can see when interacting with the Admin console, we can now indicate for our custom resources to use Virtual Threads, just by enabling that option you can create the resources that use this capability. As a restriction for this is that you need to use JDK 21, and by default is enabled for all the default resources
