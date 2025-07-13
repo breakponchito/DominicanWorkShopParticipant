@@ -9,7 +9,7 @@ To start the workshop and complete each of the tasks, we need to have the follow
 1. Java 21
 2. Maven (lastest version)
 3. IDE (optional)
-4. Payara 7
+4. Payara 7 Alpha
 5. H2 Database
 6. cURL (latest version)
 
@@ -17,7 +17,7 @@ To start the workshop and complete each of the tasks, we need to have the follow
 
 Currently on the market, there are several versions of the Java SDK apart from the official version made by Oracle. We can choose any other distribution of the SDK made by any other provider. Those versions came from the OpenJDK initiative, and we can use for our development. Examples for this are the following: Eclipse Temurin, Azul JDK, Amazon Correto, etc.
 
-For this Workshop I will use Azul JDK that you can download from the following page: [Azul JDK](https://www.azul.com/downloads/?package=jdk#zulu)
+For this Workshop, I will use Azul JDK that you can download from the following page: [Azul JDK](https://www.azul.com/downloads/?package=jdk#zulu)
 
 For Jakarta 11 libraries, we can use JDK 17 or upward. For the Workshop, we are going to use JDK 21 LTS.
 
