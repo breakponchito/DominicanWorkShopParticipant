@@ -54,7 +54,7 @@ Let's start with the ManagedExecutorService. This will help us to execute tasks 
 
 ---
 **NOTE**
-For Concurrency 3.1 now you can use the annotation @Inject to get the resources
+For Concurrency 3.1 now you can use the annotation @Inject to inject the resources
 ---
 
 then we can use that executor to send the work to new threads, look at the following example:
@@ -133,7 +133,7 @@ Then we can use the ManagedThreadFactory to execute a task:
     }
 ```
 
-Finally, the ManagedScheduledExecutorService. This will help us to define a task to be executed at specified and periodic times. To use, you can Inject the default resource from the server:
+And, the ManagedScheduledExecutorService. This will help us to define a task to be executed at specified and periodic times. To use, you can Inject the default resource from the server:
 
 ```java
     @Inject
@@ -161,7 +161,7 @@ Then we can use the ManagedScheduleExecutorService. The first example show how t
     }
 ```
 
-The previous two examples show how you can create a task to start at a specified time, and the second endpoint shows how you can execute a task for a periodic time. The method scheduleAtFixedRate submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given period; that is, executions will commence after initialDelay, then initialDelay + period, then initialDelay + 2 * period, and so on. The method scheduleWithFixedDelay submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given delay between the termination of one execution and the commencement of the next.
+The previous two examples show how you can create a task to start at a specified time, and the second endpoint shows how you can execute a task for a periodic time. The method scheduleAtFixedRate submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given period; that is, executions will begin after initialDelay, then initialDelay + period, then initialDelay + 2 * period, and so on. The method scheduleWithFixedDelay submits a periodic action that becomes enabled first after the given initial delay, and subsequently with the given delay between the termination of one execution and the commencement of the next.
 
 Other implementations that we need to mention are the ForkAnJoinPool and the CronTrigger configuration. First, start with CronTrigger as the name suggests this is used to configure the cron notation on a class to be used as a configuration to execute periodic tasks. With the following example, you will see how to use it. If you want to see the reference of the API to understand the details for the cron notation, review the following page: [CronTrigger API](https://jakarta.ee/specifications/concurrency/3.1/apidocs/jakarta.concurrency/jakarta/enterprise/concurrent/crontrigger)
 
@@ -455,13 +455,45 @@ Use the commands to create custom resources for each of them. Use the custom res
 
 A Java Virtual Thread is a lightweight, user-mode thread introduced in Java 21 as part of Project Loom. Unlike traditional platform threads (which are OS threads), virtual threads are managed by the Java Virtual Machine (JVM) and do not map directly to operating system threads. This allows for a much larger number of concurrent tasks with significantly less overhead.
 
--Lightweight
--Managed by JVM
--Non-blocking I/O
--Easy to Use
--Structured Concurrency
--Improved Throughput
+[![Virtual Threads](img/virtualThreads.png)](https://blog.nashtechglobal.com/virtual-threads-the-future-of-java-threading/)
+
+- Lightweight: The Virtual Thread consumes little memory per thread, typically a few hundred bytes, compared to megabytes for platform threads. This enables applications to handle millions of concurrent tasks.
+- Managed by JVM: The JVM now handles the scheduling and lifecycle of virtual threads. It can efficiently park (suspend) and unpark (resume) virtual threads without involving the OS.
+- Non-blocking I/O: When a virtual thread performs a blocking I/O operation (like reading from a network socket), the JVM parks the virtual thread and allows its underlying platform thread to execute other virtual threads. Once the I/O operation completes, the virtual thread is unparked and resumes execution. This avoids thread starvation and improves resource utilization.
+- Easy to Use:  Developers can use virtual threads with the same java.lang.Thread API they are already familiar with, making adoption straightforward. You create them using Thread.startVirtualThread() or Executors.newVirtualThreadPerTaskExecutor().
+- Structured Concurrency: Virtual threads work well with the concept of structured concurrency, which promotes more readable and maintainable concurrent code by treating concurrent tasks as a single unit of work.
+- Improved Throughput: By drastically reducing the overhead of context switching and allowing more tasks to be active concurrently, virtual threads can significantly improve the throughput of I/O-bound applications.
 
 #### How to use with Jakarta 11?
 
-As you can see when interacting with the Admin console, we can now indicate for our custom resources to use Virtual Threads, just by enabling that option you can create the resources that use this capability. As a restriction for this is that you need to use JDK 21, and by default is enabled for all the default resources
+As you can see when interacting with the Admin console and when working to create custom concurrent resources. We saw an option to enable virtual threads. By marking that option, you are telling to the Payara Server to enable Virtual Threads for each of the custom resources like: ManagedThreadFactory, ManagedExecutorService and ManagedScheduledExecutorService.
+
+![Managed Thread Factory](img/newManagedThreadFactory.png)
+
+Another option we can use to make this is with commands. The following commands show you how you can enable virtual threads with commands:
+
+```java
+asadmin> create-managed-executor-service concurrent/Executor1
+```
+then get the properties to list available options
+
+```java
+asdmin> get resources.managed-executor-service.concurrent/Executor1.*
+```
+![Properties result](img/propertiesResultFromCommandBefore.png)
+
+now change the property with the following command:
+
+```java
+asdmin>  set resources.managed-executor-service.concurrent/Executor1.use-virtual-threads=true
+```
+check again properties to see the reflected change:
+
+![Properties result](img/propertiesResultFromCommand.png)
+
+-----
+#### **Task**
+Now it is time to experiment. The following task is to enable for all previous concurrent resources the capability for virtual threads. Remember that this property only applies to the following resources: ManagedThreadFactory, ManagedExecutorService and ManagedScheduledExecutorService. Enable the property using any of the available modes and run the examples with it.
+
+-----
+

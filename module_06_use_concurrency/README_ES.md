@@ -1,0 +1,503 @@
+# Jakarta 11 with Payara 7 WorkShop
+
+## Participante
+
+### **Module 6: Concurrency.**
+
+#### Jakarta Concurrency
+
+La especificación Jakarta Concurrency es parte del conjunto de la especificación Jakarta 11, y su enfoque principal es el desarrollo de un marco estándar para gestionar y utilizar la programación concurrente dentro de las aplicaciones empresariales. Esta especificación se encarga de los desafíos del multithreading en un entorno gestionado, asegurando que las operaciones concurrentes no comprometan la integridad del servidor de aplicaciones o del contenedor.
+
+Por ello, no se recomienda utilizar construcciones de hilos nativas, ya que esto comprometerá el entorno gestionado. Esto significa que no podemos utilizar directamente las APIs de concurrencia de Java SE como `java.lang.Thread` o `java.util.Timer`.
+
+La implementación base de esta especificación proporciona una versión gestionada de las interfaces conocidas de `java.util.concurrent.ExecutorService`. Para ello, tenemos lo siguiente:
+
+![Jakarta Concurrency Services](img/concurrencyServices.png)
+
+- **ManagedExecutorService**: Similar a `java.util.concurrent.ExecutorService`, se utiliza para enviar tareas asíncronas para su ejecución en un pool de hilos gestionado. Es ideal para descargar operaciones de larga duración del hilo principal de la solicitud.
+- **ManagedScheduledExecutorService**: Extiende `ManagedExecutorService` para programar tareas para que se ejecuten en un momento específico o de forma repetida.
+- **ContextService**: Facilita la captura y propagación de información contextual (como el contexto de seguridad, el contexto del cargador de clases, el contexto CDI) a través de diferentes hilos. Esto es vital para evitar problemas cuando una tarea se ejecuta en un hilo diferente al que la inició.
+- **ManagedThreadFactory**: Permite la creación de hilos que heredan el contexto del componente que los creó, asegurando que se propaguen la seguridad adecuada y otros contextos.
+
+#### Beneficios de usar la especificación
+
+Al añadir la implementación de esto, obtenemos muchos beneficios, algunos de ellos son los siguientes:
+
+- **Reducción del código repetitivo y la complejidad**: Con esta capa de servicios gestionados, ahora es sencillo de usar e implementar en nuestro día a día; inyecta los recursos cuando los necesites y úsalos en tus componentes específicos.
+- **Compatibilidad con la Concurrencia de Java SE**: Como dijimos, esta especificación está sobre la implementación de Java SE, proporcionando las adiciones más recientes para la Concurrencia. Veremos cómo usar los Hilos Virtuales más adelante.
+- **Mejora del rendimiento y la capacidad de respuesta**: Al descargar tareas de larga duración a hilos en segundo plano, las aplicaciones pueden mantenerse receptivas a las interacciones del usuario.
+- **Mejor utilización de los recursos**: Utiliza eficientemente los núcleos de CPU disponibles ejecutando múltiples tareas de forma concurrente.
+- **Integridad del Contenedor**: Asegura que las operaciones concurrentes respeten el entorno del contenedor y no den lugar a fugas de recursos o vulnerabilidades de seguridad.
+- **Estandarización**: Proporciona una forma estándar y neutral de proveedor para implementar la concurrencia en aplicaciones Jakarta EE, promoviendo la portabilidad.
+- **Soporte para Características Modernas de Java**: Las versiones más nuevas de Jakarta Concurrency (como la 3.1 en Jakarta EE 11) están incorporando soporte para características modernas de Java como los Hilos Virtuales, mejorando aún más la escalabilidad y el rendimiento.
+
+#### ¿Cómo usarlo?
+
+Payara proporciona recursos predeterminados y la capacidad de definir nuevos según las necesidades. Para revisar los servicios disponibles para la concurrencia, vaya a la siguiente URL: [Payara Home](http://localhost:4848/common/index.jsf)
+
+![Payara Home](img/payaraHome.png)
+
+Vaya a la sección **Resources** en el menú lateral izquierdo y seleccione **Concurrent Resources**, expanda la opción y vea las opciones disponibles:
+
+![Concurrency Resources](img/concurrencyResources.png)
+
+Ahora es el momento de crear una implementación sencilla utilizando nuestros servicios de concurrencia gestionados.
+
+#### Uso de recursos predeterminados
+
+Comencemos con `ManagedExecutorService`. Esto nos ayudará a ejecutar tareas de forma asíncrona, y el contexto del contenedor se propaga al hilo que ejecuta la tarea. Para usarlo, necesita inyectar el recurso en su componente de esta manera:
+
+```java
+    @Resource
+    private ManagedExecutorService managedExecutorService;
+```
+
+---
+**NOTE** 
+Para Concurrency 3.1, ahora puede usar la anotación `@Inject` para obtener los recursos.
+---
+
+
+Luego podemos usar ese ejecutor para enviar el trabajo a nuevos hilos, vea el siguiente ejemplo:
+
+```java
+    @Inject
+    private ManagedExecutorService managedExecutorService;
+
+    @GET
+    @Path("managedExecutorService")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getManagedExecutorService() throws ExecutionException, InterruptedException {
+        AtomicInteger numberExecution1 = new AtomicInteger(0);
+        AtomicInteger numberExecution2 = new AtomicInteger(0);
+        Future future1 = managedExecutorService.submit(() -> {
+            numberExecution1.incrementAndGet();
+            System.out.println("Job running" + Thread.currentThread().getName());
+        });
+        
+        Future future2 = managedExecutorService.submit(() -> {
+            numberExecution2.incrementAndGet();
+            System.out.println("Job running" + Thread.currentThread().getName());
+        });
+        
+        future1.get();
+        future2.get();
+        System.out.println("Finishing jobs:" + (numberExecution1.get() +"  "+ numberExecution2.get()));
+        return "Completed";
+    }
+
+```
+
+En este ejemplo, estamos creando dos trabajos en hilos diferentes utilizando el `ManagedExecutorService` para obtener un nuevo número atómico que se imprimirá en la salida.
+
+Ahora necesitamos revisar el `ContextService`; esto nos ayudará a capturar y propagar información contextual (por ejemplo, contexto de seguridad, contexto de transacción) desde el hilo donde se envía una tarea al hilo donde se ejecuta.
+
+En el siguiente ejemplo, le mostraré cómo el hilo utilizado por el `ManagedExecutorService` está usando la información contextual para imprimir el nombre del recurso JNDI solicitado. Esto es proporcionado automáticamente por el `ContextService` predeterminado proporcionado por el servidor.
+
+```java
+    @GET 
+    @Path("contextService")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getContextService() throws ExecutionException, InterruptedException {
+        Future<String> future1 = managedExecutorService.submit(() -> {
+            try {
+                return "getting data from context"+new InitialContext().lookup("java:comp/DefaultDataSource");
+            } catch (NamingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        
+        String result = future1.get();
+        
+        return "Completed with result " + result ;
+    }
+```
+
+El siguiente componente es `ManagedThreadFactory`. Este proporcionará la capacidad de crear hilos gestionados por el contenedor. Además, el contexto del contenedor se propaga al hilo que ejecuta la tarea. Para usarlo, debe inyectar el recurso en su componente de la siguiente manera:
+
+```java
+    @Inject 
+    private ManagedThreadFactory managedThreadFactory;
+```
+
+Luego podemos usar `ManagedThreadFactory` para ejecutar una tarea:
+
+```java
+    @GET
+    @Path("threadFactory")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String processWithThreadFactory() throws ExecutionException, InterruptedException {
+        Thread t  = managedThreadFactory.newThread(() -> {
+            System.out.println("ManagedThread executing");
+        });
+        
+        t.start();
+        return "Completed";
+    }
+```
+
+Y, él `ManagedScheduledExecutorService`. Esto nos ayudará a definir una tarea para ser ejecutada en momentos específicos y periódicos. Para usarlo, puede inyectar el recurso predeterminado del servidor:
+
+```java
+    @Inject
+    private ManagedScheduledExecutorService managedScheduledExecutorService;
+```
+
+Luego podemos usar el `ManagedScheduledExecutorService`. El primer ejemplo muestra cómo enviar una tarea en un momento específico, después de un retraso:
+
+```java
+    @GET
+    @Path("/scheduleTaskForGivenDelay")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String processWithScheduledExecutorService() throws ExecutionException, InterruptedException {
+        managedScheduledExecutorService.schedule(() -> System.out.println("ScheduledExecutor executing"), 10, TimeUnit.SECONDS);
+        return "Scheduled task";
+    }
+    
+    @GET
+    @Path("/scheduleTaskForPeriodicTime")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String scheduleServiceAllTheTime() throws ExecutionException, InterruptedException {
+        managedScheduledExecutorService.scheduleAtFixedRate(() -> System.out.println("ScheduledExecutor with rate"), 3, 1, TimeUnit.SECONDS);
+        managedScheduledExecutorService.scheduleWithFixedDelay(() -> System.out.println("ScheduledExecutor with delay"), 2, 2, TimeUnit.SECONDS);
+        return "Scheduled task";
+    }
+```
+
+Los dos ejemplos anteriores muestran cómo puede crear una tarea para que se inicie en un momento específico, y el segundo endpoint muestra cómo puede ejecutar una tarea de forma periódica. El método `scheduleAtFixedRate` envía una acción periódica que se habilita por primera vez después del retraso inicial dado, y posteriormente con el período dado; es decir, las ejecuciones comenzarán después de `initialDelay`, luego `initialDelay + period`, luego `initialDelay + 2 * period`, y así sucesivamente. El método `scheduleWithFixedDelay` envía una acción periódica que se habilita por primera vez después del retraso inicial dado, y posteriormente con el retraso dado entre la terminación de una ejecución y el comienzo de la siguiente.
+
+Otras implementaciones que debemos mencionar son `ForkJoinPool` y la configuración `CronTrigger`. Primero, comencemos con `CronTrigger`. Como su nombre indica, se utiliza para configurar la notación cron en una clase para que se utilice como configuración para ejecutar tareas periódicas. Con el siguiente ejemplo, verá cómo usarlo. Si desea ver la referencia de la API para comprender los detalles de la notación cron, revise la siguiente página: [CronTrigger API](https://jakarta.ee/specifications/concurrency/3.1/apidocs/jakarta.concurrency/jakarta/enterprise/concurrent/crontrigger)
+
+Para usar esta configuración de `CronTrigger`, debe combinarla con `ManagedScheduledExecutorService`; aquí está el ejemplo:
+
+```java
+    @Inject
+    ManagedScheduledExecutorService managedScheduledExecutorService;
+```
+
+Luego puede usar la interfaz `Trigger` para guardar la referencia del objeto `CronTrigger` que se utilizará con `ManagedScheduledExecutorService` en el método `schedule`. Aquí está el ejemplo:
+
+```java
+    @GET
+    @Path("cronTrigger")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getText() throws InterruptedException {
+        AtomicInteger numberExecution = new AtomicInteger();
+        ZoneId santDomingo = ZoneId.of("America/America/Santo_Domingo");
+        Trigger trigger = new CronTrigger("* * * * * *", santDomingo);
+        ScheduledFuture feature = managedScheduledExecutorService.schedule(() -> {
+            numberExecution.getAndIncrement();
+            System.out.println("Cron Trigger running");
+        }, trigger);
+        Thread.sleep(10000);
+        feature.cancel(true);
+        return "CronTrigger Submitted:"+numberExecution.get();
+    }
+```
+
+Del ejemplo anterior, podemos ver que configuramos un `CronTrigger` para que se ejecutara cada segundo y la tarea usaría el disparador como configuración. La tarea incrementará un número e imprimirá un mensaje. Luego controlamos la ejecución con un retraso de 10,000 milisegundos para permitir que la tarea funcione e imprima e incremente el número 10 veces. Al finalizar, podemos obtener el número incrementado con un valor de 10.
+
+Ahora es el momento de la implementación de `ForkJoinPool`. El `ForkJoinPool` es útil cuando tiene una tarea que necesita procesar una gran cantidad de datos y desea dividir el trabajo (divide y vencerás) en unidades atómicas para que sean procesadas con el número de procesadores disponibles de su entorno. Esto implica realizar trabajo en paralelo y, en algún momento, unir todos los resultados. Para esto, necesita implementar un `ForkJoinTask` del tipo `RecursiveAction` (sin devolver resultados) o `RecursiveTask` (para devolver resultados). En el siguiente ejemplo, verá cómo usarlo.
+
+Necesitamos usar `ManagedThreadFactory` para proporcionar a `ForkJoinPool` la fuente de los hilos que utilizará la implementación:
+
+```java
+    @Inject
+    ManagedThreadFactory managedThreadFactory;
+```
+
+Luego podemos declarar el endpoint para llamar a `ForkJoinPool`, de la siguiente manera:
+
+```java
+    @GET
+    @Path("forkjoin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String forkJoinWorkerThreadExecution() throws InterruptedException, ExecutionException {
+        final long[] numbers = LongStream.rangeClosed(1, 1_000_000).toArray();
+        ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), managedThreadFactory, null, false);
+        ForkJoinTask<Long> task = new ForkJoinSum(numbers);
+        ForkJoinTask<Long> total = pool.submit(task);
+        Long t = total.get();
+        String message = String.format("Counting numbers total:%d", t);
+        pool.shutdown();
+        return message;
+    }
+```
+
+Necesitamos la implementación de `ForkJoinSum`; aquí está el código:
+
+```java
+    class ForkJoinSum  extends RecursiveTask<Long> {
+
+        public static final long THRESHOLD = 10_000;
+
+        private final long[] numbers;
+        private final int start;
+        private final int end;
+
+        public ForkJoinSum(long[] numbers) {
+            this(numbers, 0, numbers.length);
+        }
+
+        private ForkJoinSum(long[] numbers, int start, int end) {
+            this.numbers = numbers;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected Long compute() {
+            System.out.println("thread name:"+Thread.currentThread().getName());
+            int length = end - start;
+            if (length <= THRESHOLD) {
+                return computeSequentially();
+            }
+            ForkJoinSum leftTask = new ForkJoinSum(numbers, start, start + length / 2);
+            leftTask.fork();
+            ForkJoinSum rightTask = new ForkJoinSum(numbers, start + length / 2, end);
+            Long rightResult = rightTask.compute();
+            Long leftResult = leftTask.join();
+            return leftResult + rightResult;
+        }
+
+        private long computeSequentially() {
+            long sum = 0;
+            for (int i = start; i < end; i++) {
+                sum += numbers[i];
+            }
+            return sum;
+        }
+    }
+```
+
+Del ejemplo, vemos que se creó un array de un millón de números largos sumados secuencialmente. Luego se crea el `ForkJoinPool` utilizando los procesadores disponibles del sistema, nuestra instancia de `ManagedThreadFactory` y otros dos valores indicados como nulo y falso. Luego necesitamos usar nuestra clase de implementación para la `RecursiveTask` que devolverá los resultados al finalizar. Finalmente, iniciamos la ejecución llamando al método `submit` del pool creado. Para obtener los resultados, llamamos al método `get` para esperar hasta que toda la ejecución finalice, después de lo cual se imprime el resultado en pantalla.
+
+Continuando con las nuevas adiciones para Jakarta Concurrency 3.1, ahora tenemos la anotación `@Schedule` que puede ejecutar, en combinación con la anotación `@Asynchronous`, una tarea para un tiempo de programación especificado utilizando notación cron o con propiedades de tiempo personalizadas. Esto se puede indicar en un método de un bean. Luego puede inyectar e iniciar la ejecución en el momento que desee. El siguiente es el ejemplo de la clase con el método para una configuración de `Schedule`:
+
+```java
+    @RequestScoped
+    public class ScheduledTask {
+
+    @Inject
+    private ManagedScheduledExecutorService scheduledExecutorService;
+
+    @Asynchronous(runAt = {
+            @Schedule(cron = "*/3 * * * * *")
+    })
+    public void scheduledTask() {
+        System.out.println("Scheduled Task");
+    }
+}
+```
+
+Luego debe inyectar el bean en el componente que necesite, donde comenzará la ejecución de la tarea.
+
+```java
+    @Inject
+    private ScheduledTask scheduledTask;
+    
+    @GET
+    @Path("asynchronous")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAsynchronousWorkerThreadExecution() throws InterruptedException, ExecutionException {
+        scheduledTask.scheduledTask();
+        return "asynchronous";
+    }
+```
+
+Aquí estamos iniciando la ejecución de la tarea programada al llamar al método `scheduledTask()`.
+
+El último tema de esta sección es la adición de una forma personalizada de integrar la información contextual denominada Contextual Flows (Reactive Streams); con esto, la idea es habilitar una forma de usar la información contextual en el contexto de implementaciones reactivas. Si bien crear un ejemplo completo de este tema implicaría un gran esfuerzo, por ahora, solo mostramos en el siguiente código cómo podemos lograrlo con la API actual:
+
+```java
+@ApplicationScoped
+public class ReactiveService {
+
+    @Inject
+    private ContextService contextService;
+
+    public Flow.Subscriber<String> createContextualSubscriber(Flow.Subscriber<String> delegate) {       
+        return contextService.contextualSubscriber(delegate);
+    }
+}
+```
+
+-----
+#### **Task**
+Con toda esta información, ahora es su turno de experimentar. Por eso, su trabajo por ahora es copiar cada uno de los ejemplos aquí descritos y usarlos en su propia implementación. Recuerde que el último tema muestra una implementación parcial de cómo pueden funcionar los flujos contextuales, y es por eso que no es suficiente para ejecutar flujos reactivos en este ejemplo.
+
+-----
+
+#### Defina su recurso personalizado
+
+Con Payara, puede crear sus recursos personalizados utilizando la Consola de Administración o con comandos de administración. En los siguientes ejemplos, verá cómo hacerlo dentro de Payara Server.
+
+##### Context Service
+
+Puede agregar un recurso personalizado utilizando la Consola de Administración o mediante comandos de administración. Si desea agregar el recurso personalizado para `ContextService`, entonces debe ir a la opción del menú ***Resources -\> Concurrent Resources -\> Context Service*** en el lado izquierdo de la página principal de Payara Server:
+
+![Resources Menu](img/resourcesMenu.png)
+
+Una vez seleccionado, verá las opciones para crear un Servicio de Contexto personalizado:
+
+![create Context Service](img/optionsContextService.png)
+
+Haga clic en la opción **New** y añada el siguiente nombre: `concurrent/ContextFromConsole`
+
+Finalmente, haga clic en **OK** para guardar el nuevo recurso.
+
+![create Custom Context Service](img/createCustomContextService.png)
+
+Haga clic en **Save**, y listo, el nuevo recurso se guarda. Puede realizar la misma acción usando el siguiente comando:
+
+```shell
+asadmin create-context-service concurrent/Context1
+```
+
+Para verificar el recurso disponible desde la línea de comandos, use lo siguiente:
+
+```shell
+asadmin list-context-services
+```
+
+Para actualizar el recurso, primero necesita ver qué propiedades cambiar con el siguiente comando:
+
+```shell
+asadmin get resources.context-service.concurrent/Context1.*
+```
+
+Luego puede establecer un nuevo valor para una de ellas:
+
+```shell
+asadmin set resources.context-service.concurrent/Context1.deployment-order=120
+```
+
+Si necesita eliminar el recurso, puede hacerlo con el siguiente comando:
+
+```shell
+asadmin delete-context-service concurrent/Context1
+```
+
+Como puede ver, es fácil interactuar con los recursos en ambos modos. Finalmente, si necesita usar el nuevo recurso en su código, debe inyectarlo y localizarlo con un nombre JNDI específico de la siguiente manera:
+
+```java
+    @Resource(name = "concurrent/ContextFromConsole")
+    private ContextService contextService;
+```
+
+Eso es suficiente para inyectar el recurso y usar su código.
+
+##### Managed Thread Factories, Managed Executor Service y Scheduled Executor Services
+
+Como podemos ver con `ContextService`, podemos hacer lo mismo para las otras categorías de recursos. Abra la opción que necesite desde la consola y cree el recurso. La recomendación es usar un nombre que corresponda al recurso para una fácil identificación:
+
+![Other options expanded](img/otherOptionsExpanded.png)
+
+![New Managed Thread Factory](img/newManagedThreadFactory.png)
+
+![New Managed Executor Service](img/newManagedExecutorService.png)
+
+![New Managed Schedule Executor Service](img/managedScheduleExecutorService.png)
+
+Para resumir los comandos, tengo la siguiente tabla:
+
+Comandos de Managed Thread Factory:
+
+| Comando | Acción |
+|---|---|
+|`asadmin> create-managed-thread-factory concurrent/Factory1`| Crea un nuevo Recurso de Managed Thread Factory |
+|`asadmin> list-managed-thread-factories`| Lista las Managed Thread Factories disponibles |
+|`asdmin> get resources.managed-thread-factory.{resource-JNDI-name}.*`| Obtiene las propiedades de Managed Thread Factory del nombre JNDI especificado |
+|`asdmin> set resources.managed-thread-factory.{resource-JNDI-name}.deployment-order=120`| Establece la propiedad especificada para Managed Thread Factory usando el nombre JNDI |
+|`asadmin> delete-managed-thread-factory concurrent/Factory1`| Elimina la Managed Thread Factory especificada con el nombre JNDI |
+
+Comandos de Managed Executor Services:
+
+| Comando | Acción |
+|---|---|
+|`asadmin> create-managed-executor-service concurrent/Executor1`| Crea un nuevo Recurso de Managed Executor Service |
+|`asadmin> list-managed-executor-services`| Lista los Managed Executor Services disponibles |
+|`asdmin> get resources.managed-executor-service.{resource-JNDI-name}.*`| Obtiene las propiedades de Managed Executor Service del nombre JNDI especificado |
+|`asdmin> set resources.managed-executor-service.{resource-JNDI-name}.deployment-order=120`| Establece la propiedad especificada para Managed Executor Service usando el nombre JNDI |
+|`asadmin> delete-managed-executor-service concurrent/Executor1`| Elimina el Managed Executor Service especificado con el nombre JNDI |
+
+Managed Scheduled Executor Services:
+
+| Comando | Acción |
+|---|---|
+|`asadmin> create-managed-scheduled-executor-service concurrent/ScheduledExecutor1`| Crea un nuevo Recurso de Managed Scheduled Executor Service |
+|`asadmin> list-managed-scheduled-executor-services`| Lista los Managed Scheduled Executor Service disponibles |
+|`asdmin>get resources.managed-scheduled-executor-service.{resource-JNDI-name}.*`| Obtiene las propiedades de Managed Scheduled Executor Service del nombre JNDI especificado |
+|`asdmin> set resources.managed-scheduled-executor-service.{resource-JNDI-name}.deployment-order=120`| Establece la propiedad especificada para Managed Scheduled Executor Service usando el nombre JNDI |
+|`asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1`| Elimina el Managed Scheduled Executor Service especificado con el nombre JNDI |
+
+Para inyectar cada uno de ellos, use la anotación `@Resource` de la siguiente manera:
+
+```java
+    @Resource(name = "concurrent/Factory1")
+    private ManagedThreadFactory managedThreadFactory1;
+```
+
+```java
+    @Resource(name = "concurrent/Executor1")
+    private ManagedExecutorService managedExecutorService1;
+```
+
+```java
+    @Resource(name = "concurrent/ScheduledExecutor1")
+    private ManagedScheduledExecutorService managedScheduledExecutorService1;
+```
+
+-----
+#### **Task**
+Usa los comandos para crear recursos personalizados para cada uno. Usa los recursos personalizados en lugar de los predeterminados.
+
+-----
+
+#### ¿Qué son los Hilos Virtuales?
+
+Un **Hilo Virtual** de Java es un hilo ligero en modo de usuario introducido en Java 21 como parte del Proyecto Loom. A diferencia de los hilos de plataforma tradicionales (que son hilos del sistema operativo), los hilos virtuales son gestionados por la Máquina Virtual de Java (JVM) y no se mapean directamente a los hilos del sistema operativo. Esto permite un número mucho mayor de tareas concurrentes con un gasto general significativamente menor.
+
+[![Virtual Threads](img/virtualThreads.png)](https://blog.nashtechglobal.com/virtual-threads-the-future-of-java-threading/)
+
+- **Ligeros**: Los Hilos Virtuales consumen poca memoria por hilo, típicamente unos pocos cientos de bytes, en comparación con los megabytes para los hilos de plataforma. Esto permite a las aplicaciones manejar millones de tareas concurrentes.
+- **Gestionados por la JVM**: La JVM ahora maneja la programación y el ciclo de vida de los hilos virtuales. Puede estacionar (suspender) y desestacionar (reanudar) hilos virtuales de manera eficiente sin involucrar al sistema operativo.
+- **E/S no bloqueante**: Cuando un hilo virtual realiza una operación de E/S bloqueante (como leer de un socket de red), la JVM estaciona el hilo virtual y permite que su hilo de plataforma subyacente ejecute otros hilos virtuales. Una vez que la operación de E/S se completa, el hilo virtual se desestaciona y reanuda la ejecución. Esto evita el agotamiento de hilos y mejora la utilización de los recursos.
+- **Fácil de usar**: Los desarrolladores pueden usar hilos virtuales con la misma API `java.lang.Thread` con la que ya están familiarizados, lo que facilita la adopción. Se crean usando `Thread.startVirtualThread()` o `Executors.newVirtualThreadPerTaskExecutor()`.
+- **Concurrencia estructurada**: Los hilos virtuales funcionan bien con el concepto de concurrencia estructurada, que promueve un código concurrente más legible y mantenible al tratar las tareas concurrentes como una única unidad de trabajo.
+- **Mejora del rendimiento**: Al reducir drásticamente la sobrecarga del cambio de contexto y permitir que más tareas estén activas simultáneamente, los hilos virtuales pueden mejorar significativamente el rendimiento de las aplicaciones con uso intensivo de E/S.
+
+#### ¿Cómo usarlo con Jakarta 11?
+
+Como puede ver al interactuar con la consola de administración y al trabajar para crear recursos concurrentes personalizados, vimos una opción para habilitar hilos virtuales. Al marcar esa opción, le está diciendo al Servidor Payara que habilite los Hilos Virtuales para cada uno de los recursos personalizados como: `ManagedThreadFactory`, `ManagedExecutorService` y `ManagedScheduledExecutorService`.
+
+![Managed Thread Factory](img/newManagedThreadFactory.png)
+
+Otra opción que podemos usar para lograr esto es con comandos. Los siguientes comandos le muestran cómo puede habilitar los hilos virtuales con comandos:
+
+```java
+asadmin> create-managed-executor-service concurrent/Executor1
+```
+
+Luego obtenga las propiedades para listar las opciones disponibles:
+
+```java
+asdmin> get resources.managed-executor-service.concurrent/Executor1.*
+```
+![Properties result](img/propertiesResultFromCommandBefore.png)
+
+Ahora cambie la propiedad con el siguiente comando:
+
+```java
+asdmin>  set resources.managed-executor-service.concurrent/Executor1.use-virtual-threads=true
+```
+
+Verifique nuevamente las propiedades para ver el cambio reflejado:
+
+![Properties result](img/propertiesResultFromCommand.png)
+
+-----
+#### **Task**
+Ahora es momento de experimentar. La siguiente tarea es habilitar la capacidad de hilos virtuales para todos los recursos concurrentes anteriores. Recuerde que esta propiedad solo aplica a los siguientes recursos: **ManagedThreadFactory**, **ManagedExecutorService** y **ManagedScheduledExecutorService**. Habilite la propiedad usando cualquiera de los modos disponibles y ejecute los ejemplos con ella.
+
+-----
