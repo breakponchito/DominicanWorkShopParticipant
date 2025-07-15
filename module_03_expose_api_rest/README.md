@@ -320,7 +320,7 @@ This is the last task for the module. Expose the functionality as a REST service
 - Make a GET REST endpoint to find all Books available
 - Make a POST REST endpoint to insert a Book
 - Make a PUT REST endpoint to update a Book
-- Make a DELETE REST endpoint to delete a Book indicating the id
+- Make a DELETE REST endpoint to delete a Book indicating the ID
 
 -----
 
