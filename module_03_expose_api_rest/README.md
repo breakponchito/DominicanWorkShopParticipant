@@ -6,7 +6,7 @@
 
 #### Introduction to Jakarta RESTful Web Service
 
-Representational State Transfer (REST) is an architectural style where the web services are viewed as resources, and ca be identified by Uniform Resources Identifiers (URIs). The Web Services implemented using REST are named RESTful Web Services. With Jakarta EE, the specification that defines this style is Jakarta RESTful Web Services. For Jakarta 11 now we are on the version 4.0.
+Representational State Transfer (REST) is an architectural style where the Web Services are viewed as resources, and ca be identified by Uniform Resources Identifiers (URIs). The Web Services implemented using REST are named RESTful Web Services. With Jakarta EE, the specification that defines this style is Jakarta RESTful Web Services. For Jakarta 11 now we are on the version 4.0.
 
 For Jakarta RESTful Web Services 4.0 we have multiple implementations showed on the following table:
 
@@ -177,9 +177,153 @@ For the POST service we need to call the post() method, for this method we need 
 -----
 #### **Task**
 Now is the time to create your stand-alone client application. Copy most of the code content provided from the examples and test your Hello World Rest Service.
+
 -----
 
 #### Using Query and Path parameters
+
+For RESTful Web Services we can pass parameters to determine the specific object we need from the data that is available from the database. This is very useful because we can define the criteria to access our resources to optimize results and simplify implementation. To indicate parameters we have two flavors that we can use independently or together. It depends on the use we want to provide to the resource. The two modes are: query and path parameters.
+
+##### Query Parameters
+
+To indicate query parameters, we need to use the annotation @QueryParam applied on the list of parameters from the method. The value will be provided from the request that accesses the resource, that means that the value is provided on the URL of the request.
+
+For example, if we want to send the name property with a value, we need to indicate in the following way on our resource class:
+
+```java
+@Path("/hello-world")
+public class HelloWorldResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloWorld(@QueryParam("name") String name) {
+        return "Hello World! " + name;
+    }
+}
+```
+To send the value on the request, we need to use something like the following:
+
+```http request
+curl http://localhost:8080/myapplication/api/hello-world?name=Alfonso
+```
+
+If we need to include multiple with different type we can do it
+
+```java
+@Path("/hello-world")
+public class HelloWorldResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloWorld(@QueryParam("name") String name, @QueryParam("lastName") String lastName,
+                             @QueryParam("age") int age) {
+        return "Hello World!" + name + ", " + lastName + ", " + age;
+    }
+}
+```
+To send more than one value to the URL we need to separate with **&** symbol:
+
+```http request
+curl "http://localhost:8080/myapplication/api/hello-world?name=Alfonso&lastName=Valdez&age=40"
+```
+
+---
+**NOTE**
+The **&** on curl request is interpreted as a separation of commands or run a command in background it depends on the kind of shell.
+To use correctly for our request enclose the entire URL with double quotes.
+
+---
+
+For the Jakarta REST Client API we can do the following to include query parameters:
+
+```java
+    public void callGet() {
+        Client client = ClientBuilder.newClient();
+        Response response = client
+                .target("http://localhost:8080/myapplication/api/hello-world")
+                .queryParam("name", "Alfonso")
+                .queryParam("lastName", "Valdez")
+                .queryParam("age", 40)
+                .request()
+                .get();
+        System.out.println(response.readEntity(String.class));
+    }
+```
+
+As we can see, all we need to do to pass a parameter is to invoke the queryParam() method on the jakarta.ws.rs.client.WebTarget instance returned by the target() method invocation on our Client instance. The first argument to this method is the parameter name and must match the value of the @QueryParam annotation on the web service. The second parameter is the value that we need to pass to the web service
+
+
+##### Path Parameters
+
+In the case of Path parameters as the name suggests, these types of parameters should need to be part of the path to access the resource. The following example shows this case:
+
+```java
+@Path("/hello-world")
+public class HelloWorldResource {
+
+    @GET
+    @Path("{name}/")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloWorld(@PathParam("name") String name) {
+        return "Hello World!" + name;
+    }
+}
+```
+To send the value on the request, we need to use something like the following:
+
+```http request
+curl http://localhost:8080/myapplication/api/hello-world/Alfonso/
+```
+
+As you can see from the example, it is necessary to use the annotation @PathParam on the list of parameters and the name should correspond to the one defined on the value indicated on the @Path annotation between braces. If we need to indicate multiple parameters, we can do as follows:
+
+```java
+    @GET
+    @Path("/{name}/{lastName}/{age}/")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloWorld(@PathParam("name") String name, @PathParam("lastName") String lastName,
+                             @PathParam("age") int age) {
+        return "Hello World!" + name + ", " + lastName + ", " + age;
+    }
+```
+
+To send multiple values on the curl check the following example:
+
+```http request
+curl http://localhost:8080/myapplication/api/hello-world/Alfonso/Valdez/40
+```
+
+For the Jakarta REST Client API we can do the following to include path parameters:
+
+```java
+    public void callGet() {
+        Client client = ClientBuilder.newClient();
+        Response response = client
+                .target("http://localhost:8080/DominicanWorkshop-1.0-SNAPSHOT/api/hello-world/{name}/{lastName}/{age}")
+                .resolveTemplate("name", "Alfonso")
+                .resolveTemplate("lastName", "Valdez")
+                .resolveTemplate("age", 40)
+                .request()
+                .get();
+        System.out.println(response.readEntity(String.class));
+    }
+```
+
+For the client URL we indicated the value of the URI including the path parameters as defined on the REST service. To include the value, we need to call the method resolveTemplate(). This requires the name and the value as parameters.
+
+-----
+#### **Task**
+
+This is the last task for the module. Expose the functionality as a REST service to make CRUD operations for the Book catalog project. I can give you here some advice to achieve the goal:
+
+- Make a GET REST endpoint to find a Book by Id
+- Make a GET REST endpoint to find all Books available
+- Make a POST REST endpoint to insert a Book
+- Make a PUT REST endpoint to update a Book
+- Make a DELETE REST endpoint to delete a Book indicating the id
+
+-----
+
 
 
 
