@@ -23,10 +23,10 @@ Esta lista no es definitiva porque esta especificación fue lanzada recientement
 
 El estilo arquitectónico REST está diseñado para usar un protocolo de comunicación sin estado, típicamente HTTP. Los siguientes principios fomentan que las aplicaciones RESTful sean simples, ligeras y rápidas:
 
-- Identificación de recursos a través de URI: Un servicio web RESTful expone un conjunto de recursos que identifican los objetivos de la interacción con sus clientes. Los recursos se identifican mediante URIs, que proporcionan un espacio de direcciones global para el descubrimiento de recursos y servicios.
-- Interfaz uniforme: Los recursos se manipulan utilizando un conjunto fijo de operaciones descritas por el protocolo. Consulte la tabla en el siguiente tema para ver la lista completa de métodos disponibles.
-- Mensajes autodescriptivos: Los recursos están desacoplados de su representación para que su contenido pueda ser accedido en una variedad de formatos, como HTML, XML, texto plano, PDF, JPEG, JSON y otros formatos de documentos.
-- Interacciones con estado a través de enlaces: Cada interacción con un recurso es sin estado; es decir, los mensajes de solicitud son autocontenidos. Las interacciones con estado se basan en el concepto de transferencia explícita de estado.
+- **Identificación de recursos a través de URI**: Un servicio web RESTful expone un conjunto de recursos que identifican los objetivos de la interacción con sus clientes. Los recursos se identifican mediante URIs, que proporcionan un espacio de direcciones global para el descubrimiento de recursos y servicios.
+- **Interfaz uniforme**: Los recursos se manipulan utilizando un conjunto fijo de operaciones descritas por el protocolo. Consulte la tabla en el siguiente tema para ver la lista completa de métodos disponibles.
+- **Mensajes autodescriptivos**: Los recursos están desacoplados de su representación para que su contenido pueda ser accedido en una variedad de formatos, como HTML, XML, texto plano, PDF, JPEG, JSON y otros formatos de documentos.
+- **Interacciones con estado a través de enlaces**: Cada interacción con un recurso es sin estado; es decir, los mensajes de solicitud son autocontenidos. Las interacciones con estado se basan en el concepto de transferencia explícita de estado.
 
 Para entender los servicios web RESTful, necesitamos introducir la semántica definida para usarlos. Las operaciones base que podemos realizar con los servicios web RESTful se definen en la siguiente tabla:
 
@@ -125,7 +125,7 @@ Este componente de configuración no necesita especificar ningún método y pued
 
 #### **Tarea**
 
-## Ahora es el momento de experimentar. A partir de la aplicación base que estamos implementando, cree el primer servicio web RESTful proporcionando todos los componentes necesarios para que funcione.
+## Ahora es el momento de experimentar. A partir de la aplicación base que estamos implementando, cree el primer servicio web RESTful proporcionando todos los componentes necesarios para que funcione. Recuerda que, por defecto, Jakarta Starter crea un recurso y una configuración para un servicio REST. Revisa esos componentes y edítalos según sea necesario. Copia también el ejemplo que mostramos aquí para realizar una llamada GET y POST sencilla.
 
 #### Definiendo la aplicación cliente
 
@@ -173,7 +173,7 @@ public class Main {
 }
 ```
 
-Como puede ver en el ejemplo, lo primero que necesitamos es crear nuestra implementación de `jakarta.ws.rs.client.Client`. Para hacer eso, necesitamos usar la clase `jakarta.ws.rs.client.ClientBuilder` y llamar al método `newClient()`; esto devolverá una instancia de la clase `Client`. Luego, necesitamos proporcionar la URL de destino que queremos consumir usando el método `target()` y pasando el URI del servicio web RESTful. El método `target()` devolverá una instancia de `jakarta.ws.rs.client.WebTarget`, luego necesitamos invocar el método `request()` desde `WebTarget`; esto devolverá una interfaz `jakarta.ws.rs.client.Invocation.Builder`. Para el servicio GET, necesitamos llamar al método `get()` desde la interfaz `Builder`, y el resultado se envolverá usando la clase `jakarta.ws.rs.core.Response`. Para leer el mensaje de resultado, llamamos al método `readEntity()` de la instancia `Response` agregando el valor del resultado de retorno, en este caso la clase `String`.
+Como puede ver en el ejemplo, lo primero que necesitamos es crear nuestra implementación de `jakarta.ws.rs.client.Client`. Para hacer eso, necesitamos usar la clase `jakarta.ws.rs.client.ClientBuilder` y llamar al método `newClient()`; esto devolverá una instancia de la clase `Client`. Luego, necesitamos proporcionar la URL de destino que queremos consumir usando el método `target()` y pasando el URI del servicio web RESTful. El método `target()` devolverá una instancia de `jakarta.ws.rs.client.WebTarget`, luego necesitamos invocar el método `request()` desde `WebTarget`; esto devolverá una instancia de la interfaz `jakarta.ws.rs.client.Invocation.Builder`. Para el servicio GET, necesitamos llamar al método `get()` desde la interfaz `Builder`, y el resultado se envolverá usando la clase `jakarta.ws.rs.core.Response`. Para leer el mensaje de resultado, llamamos al método `readEntity()` de la instancia `Response` agregando el valor del resultado de retorno, en este caso la clase `String`.
 
 Para el servicio POST, necesitamos llamar al método `post()`; para este método, necesitamos indicar el `jakarta.ws.rs.client.Entity` y la Clase para envolver el resultado de la llamada al servicio. Para el primer parámetro, llamamos al método `entity()` de la clase `Entity`, que necesita dos valores: el mensaje de contenido y el `MediaType` definido desde el servicio para consumir contenido `MediaType.TEXT_PLAIN` en este caso. Para el segundo parámetro del método `post`, usaremos la clase `Response` como envoltorio para guardar el resultado de la llamada al servicio. Finalmente, leemos el resultado usando el método `readEntity()` y agregando la clase `String` para obtener el mensaje.
 
@@ -185,13 +185,13 @@ Ahora es el momento de crear su aplicación cliente independiente. Copie la mayo
 
 -----
 
-#### Usando parámetros de consulta y de ruta
+#### Usando parámetros de tipo Query y Path
 
-Para los servicios web RESTful, podemos pasar parámetros para determinar el objeto específico que necesitamos de los datos disponibles en la base de datos. Esto es muy útil porque podemos definir los criterios para acceder a nuestros recursos para optimizar los resultados y simplificar la implementación. Para indicar parámetros, tenemos dos opciones que podemos usar de forma independiente o conjunta. Depende del uso que queramos darle al recurso. Los dos modos son: parámetros de consulta y parámetros de ruta.
+Para los servicios web RESTful, podemos pasar parámetros para determinar el objeto específico que necesitamos de los datos disponibles en la base de datos. Esto es muy útil porque podemos definir los criterios para acceder a nuestros recursos para optimizar los resultados y simplificar la implementación. Para indicar parámetros, tenemos dos opciones que podemos usar de forma independiente o conjunta. Depende del uso que queramos darle al recurso. Los dos modos son: parámetros de tipo query y path.
 
-##### Parámetros de Consulta
+##### Parámetros de tipo Query
 
-Para indicar parámetros de consulta, necesitamos usar la anotación `@QueryParam` aplicada a la lista de parámetros del método. El valor se proporcionará desde la solicitud que accede al recurso, lo que significa que el valor se proporciona en la URL de la solicitud.
+Para indicar parámetros de tipo query, necesitamos usar la anotación `@QueryParam` aplicada a la lista de parámetros del método. El valor se proporcionará desde la solicitud que accede al recurso, lo que significa que el valor se proporciona en la URL de la solicitud.
 
 Por ejemplo, si queremos enviar la propiedad `name` con un valor, necesitamos indicarlo de la siguiente manera en nuestra clase de recurso:
 
@@ -213,7 +213,7 @@ Para enviar el valor en la solicitud, necesitamos usar algo como lo siguiente:
 curl http://localhost:8080/myapplication/api/hello-world?name=Alfonso
 ```
 
-Si necesitamos incluir múltiples con diferentes tipos, podemos hacerlo:
+Si necesitamos incluir múltiples tipos, podemos hacerlo:
 
 ```java
 @Path("/hello-world")
@@ -260,9 +260,9 @@ Para la API cliente de Jakarta REST, podemos hacer lo siguiente para incluir par
 
 Como podemos ver, todo lo que necesitamos hacer para pasar un parámetro es invocar el método `queryParam()` en la instancia `jakarta.ws.rs.client.WebTarget` devuelta por la invocación del método `target()` en nuestra instancia de `Client`. El primer argumento de este método es el nombre del parámetro y debe coincidir con el valor de la anotación `@QueryParam` en el servicio web. El segundo parámetro es el valor que necesitamos pasar al servicio web.
 
-##### Parámetros de Ruta
+##### Parámetros de tipo Path
 
-En el caso de los parámetros de ruta, como su nombre lo indica, este tipo de parámetros deben formar parte de la ruta para acceder al recurso. El siguiente ejemplo muestra este caso:
+En el caso de los parámetros de tipo path, como su nombre lo indica, este tipo de parámetros deben formar parte de la ruta para acceder al recurso. El siguiente ejemplo muestra este caso:
 
 ```java
 @Path("/hello-world")
@@ -332,3 +332,11 @@ Esta es la última tarea del módulo. Exponga la funcionalidad como un servicio 
 - Cree un endpoint REST DELETE para eliminar un libro indicando el ID.
 
 -----
+
+# Conclusión del Módulo 2
+
+Esto es lo aprendido al término del módulo:
+
+- El concepto de arquitectura de servicios RESTful.
+- Como implementar servicios RESTful utilizando Jakarta 11 con Payara Server.
+- Como probar los servicios utilizando la API de cliente de REST.

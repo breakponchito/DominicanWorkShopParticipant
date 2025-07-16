@@ -23,9 +23,9 @@ This list is not final because this spec was recently released for Jakarta 11 an
 
 The REST architectural style is designed to use a stateless communication protocol, typically HTTP. The following principles encourage RESTful applications to be simple, lightweight, and fast:
 
-- Resource identification through URI: A RESTful web service exposes a set of resources that identify the targets of the interaction with its clients. Resources are identified by URIs, which provide a global addressing space for resource and service discovery,
-- Uniform Interface: Resources are manipulated using a fixed set of operations described by the protocol. Check the table on the next topic to see the full list of methods available.
-- Self-description messages: Resources are decoupled from their representation so that their content can be accessed in a variety of formats, such as HTML, XML, plain text, PDF, JPEG, JSON, and other document formats.
+- **Resource identification through URI**: A RESTful web service exposes a set of resources that identify the targets of the interaction with its clients. Resources are identified by URIs, which provide a global addressing space for resource and service discovery,
+- **Uniform Interface**: Resources are manipulated using a fixed set of operations described by the protocol. Check the table on the next topic to see the full list of methods available.
+- **Self-description messages**: Resources are decoupled from their representation so that their content can be accessed in a variety of formats, such as HTML, XML, plain text, PDF, JPEG, JSON, and other document formats.
 - Stateful interactions through links: Every interaction with a resource is stateless; that is, request messages are self-contained. Stateful interactions are based on the concept of explicit state transfer.
 
 To understand RESTful Web Services we need to introduce it to the semantics defined to use it. The base operations we can make with RESTful Web Services are defined in the following table:
@@ -107,7 +107,7 @@ curl -X POST -d "my name is Alfonso" -H "Content-Type: text/plain" http://localh
 
 #### Configuring REST resources path for our application
 
-In the previous example, we said that for our service we assume our REST resource path as **api** to configure this we need to provide a class that extends jakarta.ws.rs.core.Application and must be annotated with @ApplicationPath and for the annotation we need to indicate the value for the desired REST resources path. The following example shows the case:
+In the previous example, we said that for our service we assume our REST resource path as **api** to configure this we need to provide a class that extends **jakarta.ws.rs.core.Application** and must be annotated with @ApplicationPath and for the annotation we need to indicate the value for the desired REST resources path. The following example shows the case:
 
 ```java
 @ApplicationPath("/api")
@@ -121,7 +121,7 @@ This configuration component doesn't need to specify any method and can be locat
 -----
 #### **Task**
 
-Now is the time to experiment. From the base application we are implementing create the first RESTful Web Service providing all the components that are required to make it work.
+Now is the time to experiment. From the base application we are implementing create the first RESTful Web Service providing all the components that are required to make it work. Remember that by default, The Jakarta Starter creates one resource and configuration for a REST service. Review those components and edit as required, also copy the example we showed here to make a simple GET and POST call.
 -----
 
 #### Defining Client application
@@ -170,7 +170,7 @@ public class Main {
 }
 ```
 
-As you can see from the example, the first thing we need is to create our jakarta.ws.rs.client.Client implementation. To do that, we need to use the class jakarta.ws.rs.client.ClientBuilder and call the method newClient() this will return an instance for the Client class. Then we need to provide the target URL that we want to consume using the method target() passing the URI of the RESTful web service. The target() method will return a jakarta.ws.rs.client.WebTarget instance, then we need to invoke que method request() from the WebTarget, this will return a jakarta.ws.rs.client.Invocation.Builder interface. For the GET service we need to call the get() method from the Builder interface, and the result will be wrapped using the jakarta.ws.rs.core.Response class. To read the result message, we call the method readEntity() from the Response instance adding the value of the returning result, in this case String class. 
+As you can see from the example, the first thing we need is to create our jakarta.ws.rs.client.Client implementation. To do that, we need to use the class jakarta.ws.rs.client.ClientBuilder and call the method newClient() this will return an instance for the Client class. Then we need to provide the target URL that we want to consume using the method target() passing the URI of the RESTful web service. The target() method will return a jakarta.ws.rs.client.WebTarget instance, then we need to invoke que method request() from the WebTarget, this will return a jakarta.ws.rs.client.Invocation.Builder interface instance. For the GET service we need to call the get() method from the Builder interface, and the result will be wrapped using the jakarta.ws.rs.core.Response class. To read the result message, we call the method readEntity() from the Response instance adding the value of the returning result, in this case String class. 
 
 For the POST service we need to call the post() method, for this method we need to indicate the jakarta.ws.rs.client.Entity and the Class to wrap the result of the service call. For the first parameter, we call the entity() method from Entity class, that needs two values, the content message, and the MediaType defined from the service to consume content MediaType.TEXT_PLAIN in this case. For the second parameter of the post method we will use the Response class as the wrapper to save the result of the service call. Finally, we read the result using the method readEntity() and adding the String class to get the message.
 
@@ -207,7 +207,7 @@ To send the value on the request, we need to use something like the following:
 curl http://localhost:8080/myapplication/api/hello-world?name=Alfonso
 ```
 
-If we need to include multiple with different type we can do it
+If we need to include multiple using different types, we can do it as follows:
 
 ```java
 @Path("/hello-world")
@@ -323,6 +323,14 @@ This is the last task for the module. Expose the functionality as a REST service
 - Make a DELETE REST endpoint to delete a Book indicating the ID
 
 -----
+
+# Module 3 conclusion
+
+From this last module we learn the following:
+
+- Concept of RESTful Web Services
+- How to implement a RESTful Web Service using Jakarta 11 with Payara Server
+- How to test RESTful Web Services using the REST client API
 
 
 
