@@ -6,7 +6,7 @@
 
 #### Use of Jakarta Starter
 
-Lest start to create our base application using the Jakarta EE starter. This is a tool provided by the community to 
+Lest start to create our base application using the **Jakarta EE starter**. This is a tool provided by the community to 
 configure and create your base application for different versions of Jakarta EE. In this case, we need to create a base 
 application for our book catalog. Go to the following link and create the application using and artifact id related to a 
 book catalog. Here is the link of the Jakarta Starter: [Jakarta Starter](https://start.jakarta.ee/)
@@ -45,9 +45,9 @@ How we will build a web application, we need to update our pom configuration to 
 #### **Task**
 Go to the pom file and edit to indicate the use of web profile instead of core profile for Jakarta 11: you can go to the following page to get more information about the available profiles: [Jakarta EE 11 spec](https://jakarta.ee/specifications/)
 
-Also, another page where you can find a latest version of the web profile is the following: [Maven Jakarta Web Profile](https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-web-api)
+Also, another page where you can find the latest version of the web profile is the following: [Maven Jakarta Web Profile](https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-web-api)
 
-After upgrading the application build and see if any error is shown
+After upgrading the application build and see if any error is shown.
 
 -----
 
@@ -127,7 +127,7 @@ Then you click on the OK option to proceed with the deployment. Once deployed, y
 
 ![Admin Console Deploy Finished](img/payaraDeployFinished.png)
 
-Finally, click on the application and select View Endpoints to select the following endpoint that is provided from the default source from the Jakarta Starter application: /jakartaee-book-store/rest/hello or open with the full url: localhost:8080/jakartaee-book-store/rest/hello
+Finally, click on the application and select View Endpoints to select the following endpoint that is provided from the default source from the Jakarta Starter application: /jakartaee-book-store/rest/hello or open with the full url on your browser: localhost:8080/jakartaee-book-store/rest/hello
 
 ![Payara Application Info](img/payaraApplicationDeployInfo.png)
 
@@ -221,11 +221,16 @@ Something important to provide to our application is unit testing. For this, we 
 
 We are going to use JUnit 5 to create our integration test. To simplify this, I will share with you the unit test created to test the insertion of a row on an in memory table and a select to verify the row created.
 
-Copy that file and set on the corresponding place for unit test files on your project. On my side it looks as follows:
+-----
+#### **Task**
+
+Copy the file BookTest.java and set on the corresponding place for unit test files on your project. On my side it looks as follows:
 
 ![Structure of folder for Unit Test](img/structureOfFoldersTest.png)
 
-Another thing that we need to edit is the persistence.xml file ti declare an addition persistence unit for the integration tests. Edit your file and add the following content:
+-----
+
+Another thing that we need to edit is the persistence.xml file to declare an additional persistence unit for the integration tests. Edit your file and add the following content:
 
 ```xml
     <persistence-unit name="integration-test" transaction-type="RESOURCE_LOCAL">

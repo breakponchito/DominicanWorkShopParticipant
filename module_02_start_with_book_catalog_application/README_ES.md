@@ -6,7 +6,7 @@
 
 #### Uso de Jakarta Starter
 
-Vamos a empezar a crear nuestra aplicación base usando el **Jakarta EE starter**. Esta es una herramienta proporcionada por la comunidad para configurar y crear tu aplicación base para diferentes versiones de Jakarta EE. En este caso, necesitamos crear una aplicación base para nuestro catálogo de libros. Ve al siguiente enlace y crea la aplicación usando un `artifact id` relacionado con un catálogo o tienda de libros. Aquí está el enlace de Jakarta Starter: **[Jakarta Starter](https://start.jakarta.ee/)**
+Vamos a empezar a crear nuestra aplicación base usando el **Jakarta EE starter**. Esta es una herramienta proporcionada por la comunidad para configurar y crear tu aplicación base para diferentes versiones de Jakarta EE. En este caso, necesitamos crear una aplicación base para nuestro catálogo de libros. Ve al siguiente enlace y genere la aplicación usando un `artifact id` relacionado con un catálogo o tienda de libros. Aquí está el enlace de Jakarta Starter: **[Jakarta Starter](https://start.jakarta.ee/)**
 
 ![Jakarta EE Starter](img/jakartaEEStarter.png)
 
@@ -60,7 +60,7 @@ Ahora es el momento de modelar nuestra aplicación. Para esto, necesitamos usar 
 
 - Anotar la clase con la anotación **@Entity**
 - Indicar un campo como un ID con la anotación **@Id**
-- Para el campo ID, recomiendo anotarlo con la anotación **@GeneratedValue** con la estrategia **GenerationType.AUTO** que permite generar IDs automáticamente, con esto no necesitamos preocuparnos por controlar su generación con una secuencia a nivel de base de datos, esto genera automáticamente la secuencia por nosotros.
+- Para el campo ID, recomiendo anotarlo con la anotación **@GeneratedValue** con la estrategia **GenerationType.AUTO** que permite generar ID's automáticamente, con esto no necesitamos preocuparnos por controlar su generación con una secuencia a nivel de base de datos, esto genera automáticamente la secuencia por nosotros.
 
 -----
 
@@ -134,7 +134,7 @@ Luego haz clic en la opción **OK** para proceder con el despliegue. Una vez des
 
 ![Admin Console Deploy Finished](img/payaraDeployFinished.png)
 
-Finalmente, haz clic en la aplicación y selecciona **View Endpoints** para elegir el siguiente punto final que se proporciona desde la fuente predeterminada de la aplicación Jakarta Starter: `/jakartaee-book-store/rest/hello` o ábrelo con la URL completa: `localhost:8080/jakartaee-book-store/rest/hello`
+Finalmente, haz clic en la aplicación y selecciona **View Endpoints** para elegir el siguiente punto final que se proporciona desde la fuente predeterminada de la aplicación Jakarta Starter: `/jakartaee-book-store/rest/hello` o ábrelo con la URL completa desde tu navegador: `localhost:8080/jakartaee-book-store/rest/hello`
 
 ![Payara Application Info](img/payaraApplicationDeployInfo.png)
 
@@ -162,13 +162,13 @@ El mensaje **Command deploy executed successfully** indica que la aplicación ah
 
 #### **Tarea**
 
-Despliega tu aplicación usando uno de los métodos disponibles. Después, verifica si el endpoint para "hello world" está disponible.
+Despliega tu aplicación usando uno de los dos métodos. Después, verifica si el endpoint para "hello world" está disponible.
 
 -----
 
 ### Definir un componente de servicio para interactuar con la Entidad
 
-Ahora tienes el modelo, y queremos ejecutar algunas inserciones para guardar nuestras primeras filas en una tabla. En este momento no tenemos ningún endpoint o servicio público para agregar nuestros datos. La forma más sencilla es insertar consultas directamente en la base de datos. Podemos hacer eso conectándonos a nuestra base de datos incrustada creada en las fuentes del Payara Server. Primero, necesitamos declarar el `entity manager` en algún componente para permitir la creación de las tablas una vez que se despliegue la aplicación, luego podremos conectarnos e insertar datos en nuestra tabla.
+Ahora tienes el modelo, y queremos ejecutar algunas inserciones para guardar nuestros primeros registros en una tabla. En este momento no tenemos ningún endpoint o servicio público para agregar nuestros datos. La forma más sencilla es insertar consultas directamente en la base de datos. Podemos hacer eso conectándonos a nuestra base de datos incrustada creada en las fuentes del Payara Server. Primero, necesitamos declarar el `entity manager` en algún componente para permitir la creación de las tablas una vez que se despliegue la aplicación, luego podremos conectarnos e insertar datos en nuestra tabla.
 
 Te proporcionaré la consulta SQL de inserción que puedes usar para insertar algunas filas en la tabla y verificar si esas filas fueron insertadas.
 
@@ -234,7 +234,7 @@ Algo importante que debemos proporcionar a nuestra aplicación son las pruebas u
 
 Vamos a usar JUnit 5 para crear nuestra prueba de integración. Para simplificar esto, compartiré contigo la prueba unitaria creada para probar la inserción de una fila en una tabla en memoria y una selección para verificar la fila creada.
 
-Copia ese archivo y colócalo en el lugar correspondiente para los archivos de prueba unitaria en tu proyecto. En mi caso, se ve así:
+Copia ese archivo BookTest.java y colócalo en el lugar correspondiente para los archivos de prueba unitaria en tu proyecto. En mi caso, se ve así:
 
 ![Structure of folder for Unit Test](img/structureOfFoldersTest.png)
 
@@ -355,9 +355,9 @@ Revisa el código e identifica las líneas que definen la estructura de la consu
 
 -----
 
-### Definir e incrustar con Records
+### Definir un embeddable con Records
 
-Un **Embeddable** en JPA puede ayudar a abstraer parte de la información de una tabla en un nuevo modelo para Clases Java. Ahora, con los Records, podemos definir el `@Embeddable` como un Record y luego indicar el incrustable dentro de la clase con la anotación `@Embedded`. Este es un ejemplo:
+Un **Embeddable** en JPA puede ayudar a abstraer parte de la información de una tabla en un nuevo modelo para Clases Java. Ahora, con los Records, podemos definir el `@Embeddable` como un Record y luego indicar el embeddable dentro de la clase con la anotación `@Embedded`. Este es un ejemplo:
 
 ```java
  @Entity
