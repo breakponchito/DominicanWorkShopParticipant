@@ -13,6 +13,8 @@ To start the workshop and complete each of the tasks, we need to have the follow
 5. H2 Database
 6. cURL (latest version)
 
+-----
+
 ## Java SE 21
 
 Currently on the market, there are several versions of the Java SDK apart from the official version made by Oracle. We can choose any other distribution of the SDK made by any other provider. Those versions came from the OpenJDK initiative, and we can use for our development. Examples for this are the following: Eclipse Temurin, Azul JDK, Amazon Correto, etc.
@@ -21,13 +23,19 @@ For this Workshop, I will use Azul JDK that you can download from the following 
 
 For Jakarta 11 libraries, we can use JDK 17 or upward. For the Workshop, we are going to use JDK 21 LTS.
 
+-----
+
 ## Maven
 
 Most of the examples of code were built using maven, and as you know, this is one of the tools more common used to build java enterprise applications and for dependency management. If you need to install here is the official site to get the latest version: [Maven](https://maven.apache.org/download.cgi).
 
+-----
+
 ## IDE 
 
 On the market, we have multiple choices of IDE to develop our applications. It is not mandatory to use any of the popular IDE's in the market, you can select any of them, but it is your responsibility to use the tool correctly to advance with the topics of the Workshop.
+
+-----
 
 ## Payara 7
 
@@ -121,7 +129,25 @@ Then I can connect to see tables:
 
 ![IntelliJ IDE H2 Connection](img/intelliJIdeaConnectionDatabase.png)
 
+-----
 
+#### Extra Section for Database Connection
+
+Another tool you can use to connect to your Database could be a free tool named: [DBeaver](https://dbeaver.io/)
+
+You can download, install, and configure to connect to your database. First you need to select File -> New, after this the following dialog will appear to select the operation to make:
+
+![DBeaver Connection](img/dBeaverDatabaseConnection.png)
+
+Select Database Connection and choose the driver H2 embedded V2
+
+![DBeaver Driver Selection](img/dBeaverDriverSelection.png)
+
+In the following dialog, set the url of the database targeting the location and click finish:
+
+![DBeaver Connection Settings](img/dBeaverConnectionSettings.png)
+
+-----
 
 ## cURL
 

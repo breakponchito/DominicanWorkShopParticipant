@@ -17,7 +17,7 @@ Para iniciar el taller y completar cada una de las tareas, necesitamos tener el 
 
 ## Java SE 21
 
-Actualmente en el mercado, existen varias versiones del SDK de Java además de la versión oficial de Oracle. Podemos elegir cualquier otra distribución del SDK de cualquier otro proveedor. Esas versiones provienen de la iniciativa OpenJDK y podemos usarlas para nuestro desarrollo. Ejemplos de esto son: Eclipse Temurin, Azul JDK, Amazon Corretto, etc.
+Actualmente, en el mercado existen varias versiones del SDK de Java además de la versión oficial de Oracle. Podemos elegir cualquier otra distribución del SDK de cualquier otro proveedor. Esas versiones provienen de la iniciativa OpenJDK y podemos usarlas para nuestro desarrollo. Ejemplos de esto son: Eclipse Temurin, Azul JDK, Amazon Corretto, etc.
 
 Para este Taller, usaré Azul JDK, que puedes descargar desde la siguiente página: **[Azul JDK](https://www.azul.com/downloads/?package=jdk#zulu)**
 
@@ -127,6 +127,24 @@ Como ejemplo, usando IntelliJ IDEA, tengo la siguiente página de configuración
 Luego puedo conectarme para ver las tablas:
 
 ![IntelliJ IDE H2 Connection](img/intelliJIdeaConnectionDatabase.png)
+
+-----
+
+#### Sección Extra para conexion con base de datos
+
+Otra herramienta que puedes usar para conectarte a tu Base de Datos es una herramienta gratuita llamada: [DBeaver](https://dbeaver.io/)
+
+Puedes descargarla, instalarla y configurarla para conectarte a tu base de datos. Primero, necesitas seleccionar Archivo -> Nuevo (File -> New), después de esto aparecerá el siguiente diálogo para seleccionar la operación a realizar:
+
+![Conexión de DBeaver](img/dBeaverDatabaseConnection.png)
+
+Selecciona Conexión a la Base de Datos (Database Connection) y elige el controlador H2 embedded V2.
+
+![Selección de Controlador de DBeaver](img/dBeaverDriverSelection.png)
+
+En el siguiente diálogo, establece la URL de la base de datos apuntando a la ubicación y haz clic en finalizar (finish):
+
+![Configuración de Conexión de DBeaver](img/dBeaverConnectionSettings.png)
 
 -----
 
