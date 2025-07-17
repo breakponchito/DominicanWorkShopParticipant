@@ -18,6 +18,7 @@ To start, we need to define what is Jakarta Data to understand why this is now p
 
 Jakarta Data separates persistence and the model with the repository interface. The repositories are the classes that encapsulate the data access logic, thus decoupling the persistence mechanism from the domain model. This repository acts as a gateway for accessing persistent data of one or more entity types.
 
+If you need more details about the Repository pattern please check the following page: [Repository Pattern](https://deviq.com/design-patterns/repository-pattern)
 
 #### Integrate Jakarta Data 
 
@@ -110,6 +111,12 @@ public interface EmployeeRepository {
 -----
 #### **Task**
 
-Now your task is to implement a repository pattern using Jakarta Data for an entity from our project. Choose the CRUD pattern and select the way to do. At the need you will provide a rest endpoint to make the CRUD operations.
+Now your task is to implement a repository pattern using Jakarta Data for an entity from our project. Choose the CRUD pattern and select the way to do. In the end, you will provide a rest endpoint to make the CRUD operations.
 
 -----
+
+---
+**NOTE**
+For this module to run the application it is needed to comment the second persistence unit declared on the persistence.xml and disable the unit test created on the previous module. Do that to prevent any issues when trying to run the application.
+
+---

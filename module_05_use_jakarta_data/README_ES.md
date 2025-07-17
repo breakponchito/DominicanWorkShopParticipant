@@ -18,6 +18,8 @@ Para empezar, necesitamos definir qué es Jakarta Data para entender por qué ah
 
 Jakarta Data separa la persistencia y el modelo con la interfaz del repositorio. Los repositorios son las clases que encapsulan la lógica de acceso a datos, desacoplando así el mecanismo de persistencia del modelo de dominio. Este repositorio actúa como una puerta de enlace para acceder a datos persistentes de uno o más tipos de entidades.
 
+Si requieres mas detalles sobre lo que es el patron Repository ve al siguiente link: [Repository Pattern](https://deviq.com/design-patterns/repository-pattern)
+
 #### Integrar Jakarta Data
 
 Para empezar con Jakarta Data, lo primero que necesitamos tener es la definición de una entidad, por ejemplo, la siguiente:
@@ -114,3 +116,10 @@ public interface EmployeeRepository {
 Ahora tu tarea es implementar un patrón de repositorio usando Jakarta Data para una entidad de nuestro proyecto. Elige el patrón CRUD y selecciona la forma de hacerlo. Al final, proporcionarás un *endpoint* REST para realizar las operaciones CRUD.
 
 -----
+
+---
+**NOTE**
+Para que este módulo ejecute la aplicación, es necesario comentar la segunda unidad de persistencia declarada en el archivo persistence.xml y deshabilitar la prueba unitaria que se agregó en un módulo previo. Esto evitará problemas al intentar ejecutar la aplicación.
+
+---
+
