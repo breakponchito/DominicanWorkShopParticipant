@@ -1,27 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Menu for #{title}</title>
-    </h:head>
-    <h:body>
-        <h:outputStylesheet library="css" name="style.css"/>
-        <h:messages styleClass="errorMsg"/>
-        <h:form>
-            <h:panelGrid id="root" border="1" columns="1" style="margin: 10px auto; width: 100%; ">
-                <h:panelGrid id="content1" border="1" columns="1" style="margin: 10px auto;  width: 460px">
-                    <h:panelGrid border="1" columns="1" style="margin: 10px auto;">
-                        <h:outputText value="Menu BookStore:" style="font-size: 40px; color: white;"/>
-                        <h:commandLink action="catalog" value="Catalog" style="font-size: 20px; color: white;"/>
-                        <h:commandLink action="catalogAdmin" value="Admin" style="font-size: 20px; color: white;" />
-                        <h:graphicImage library="images" name="community-logo.png"/>
-                    </h:panelGrid>
-                </h:panelGrid>
-            </h:panelGrid>
-        </h:form>
-    </h:body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                template="/WEB-INF/layout/template.xhtml">
+
+    <ui:define name="pageTitle">Menu</ui:define>
+
+    <ui:define name="content">
+        <div>
+            <h2>Book Catalog Application</h2>
+            <p>Welcome to the book catalog application.</p>
+        </div>
+    </ui:define>
+</ui:composition>

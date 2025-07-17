@@ -1,0 +1,18 @@
+{
+  "author": {
+    "address": {
+      "city": "Kansas City",
+      "state": "KS",
+      "street": "95 Poe Lane",
+      "zip": "66216"
+    },
+    "age": 30,
+    "name": "Chris Richardson"
+  },
+  "description": "Microservices Patterns teaches enterprise developers and architects how to build applications with the microservice architecture.",
+  "imageName": "imageBook10.png",
+  "isbn": "9781617294549",
+  "price": 23.99,
+  "publicationDate": "2018-08-01",
+  "title": "Microservices Patterns"
+}

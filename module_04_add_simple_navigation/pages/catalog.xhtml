@@ -18,7 +18,7 @@
                     <h:graphicImage library="images" name="#{b.imageName}"/>
                     <h:outputText value="#{b.description}" style="color: white;"/>
                     <h:panelGroup>
-                        <h:commandButton value="View Details" style="color: cornflowerblue;">
+                        <h:commandButton value="View Details" action="#{catalogService.getBookDetails()}" style="color: cornflowerblue;">
                             <f:param name="title" value="#{b.title}"/>
                         </h:commandButton>
                     </h:panelGroup>

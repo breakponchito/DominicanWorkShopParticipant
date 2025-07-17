@@ -18,7 +18,6 @@ En nuestro caso, nos centraremos en **Jakarta Faces** para integrar nuestra vist
 Para empezar, necesitamos añadir la estructura de carpetas para la aplicación web y también incluir algunos archivos de configuración. Aquí está la lista de archivos que necesitamos incluir en nuestra aplicación y un ejemplo de la estructura de carpetas:
 
 - **web.xml** (aquí configuraremos el Servlet de Jakarta Faces para resolver nuestras vistas y el ciclo de vida de los componentes de Jakarta Faces)
-- **beans.xml** (esto es para trabajar con beans CDI; por defecto, el método para iniciar los beans CDI es el modo anotado)
 
 ![Structure of Folder](img/structureOfFolderWebApp.png)
 
@@ -60,17 +59,27 @@ Despliega la aplicación en el servidor para ver si funciona correctamente. Ve a
 ![Running Hello Application](img/runningHelloEndpoint.png)
 -----
 
-#### Añadiendo página de Menú para la aplicación
+#### Añadiendo recursos para la aplicación
 
-Para crear la página de Menú para la aplicación, necesitamos incluir algunos archivos en la carpeta de recursos ubicada en `WEB-INF`. Necesitamos poner en esta ubicación nuestro archivo de estilo y también algunas imágenes en una carpeta dentro de la carpeta de recursos.
+Para crear la página de Menú para la aplicación, necesitamos incluir algunos archivos en la carpeta de recursos ubicada en `WEB-INF`. Necesitamos poner en esta ubicación nuestro archivo de estilo y también las imágenes. Además tenemos que colocar unos archivos para colocar el layout de la aplicación. Estos archivos de layout deben colocarse en el folder `WEB-INF/layout`.
+
+También en el archivo web.xml coloca la configuración de welcome file para que automáticamente se abra el menu de inicio si accedemos a la URL raíz de la aplicación. Para hacerlo coloca las siguientes líneas dentro del archivo web.xml
+
+```xml
+    <welcome-file-list>
+        <welcome-file>menu.xhtml</welcome-file>
+    </welcome-file-list>
+```
 
 -----
 
 #### **Tarea**
 
-Copia las imágenes ubicadas en la carpeta `imagesWebApp` de este módulo a una carpeta dentro de la carpeta `resources` de tu aplicación. Haz lo mismo para el archivo de estilo ubicado en la carpeta `css` de este módulo a una carpeta dentro de tu carpeta `resources`. Finalmente, copia el archivo `menu.xhtml` a la carpeta `webapp`. Construye tu aplicación y despliégala de nuevo.
+Copia las imágenes ubicadas en la carpeta `imagesWebApp` de este módulo a una carpeta dentro de la carpeta `resources` de tu aplicación. Haz lo mismo para el archivo de estilo ubicado en la carpeta `css` de este módulo a una carpeta dentro de tu carpeta `resources`. Copia tambien los archivos de layout dentro de la carpet layout en el modulo a una ubicacion en tu proyecto dentro del folder WEB-INF
 
-Después de desplegar la aplicación, abre la siguiente URL: `http://localhost:8080/jakartaee-book-store/menu.xhtml`
+Finalmente, copia el archivo `menu.xhtml` y `about-us.xhtml` a la carpeta `webapp`. Construye tu aplicación y despliégala de nuevo.
+
+Después de desplegar la aplicación, abre la siguiente URL: `http://localhost:8080/jakartaee-book-store`
 
 ![Menu App](img/menuApp.png)
 
@@ -212,16 +221,14 @@ Esta es la última parte del módulo para integrar más operaciones para el cat�
 
 #### **Tarea**
 
-Copia los siguientes archivos a tu aplicación en la carpeta `webapp`: `catalogAdmin.xhtml`, `editBook.xhtml` e `insertBook.xhtml`.
+Copia el siguiente archivo a tu aplicación en la carpeta `webapp`: `book.xhtml`.
 
-Necesitarás clases adicionales para tu proyecto que también se proporcionan en las carpetas: `converter`, `service`. Copia esos archivos en un paquete específico de tu proyecto y luego construye y despliega tu aplicación; verás más funcionalidad en tu aplicación. Aquí los ejemplos:
+Necesitarás clases adicionales para tu proyecto que también se proporcionan en las carpetas: `converter`, `service` y `entity`. Copia esos archivos en un paquete específico de tu proyecto y luego construye y despliega tu aplicación; verás más funcionalidad en tu aplicación. Aquí el ejemplo:
 
 ![Admin View](img/adminView.png)
 
-![Update View](img/updateView.png)
+Desde esta interfaz se pueden realizar las operaciones de administración de la entidad Book, interactua con ella y revisa la implementación. Otro objetivo que puedes realizar es insertar más registros a la base de datos utilizando la interfaz UI que se acaba de realizar o por medio the un servicio REST utilizando metodo POST. Si requieres información para insertar más libros ve al archivo bookinfo.txt y observa los datos, de aquí puedes obtener para crear nuevos, si requieres generar direcciones random ve al link siguiente que es un servicio gratuito para generar direcciones random: [Random Address Generator](https://www.fakepersongenerator.com/random-address)
 
-![insertView](img/insertView.png)
-
-Juega con la aplicación para interactuar con toda la funcionalidad.
+Para evitar un estado no válido en los campos de la interfaz de usuario tras actualizar un libro desde la interfaz, copie el filtro proporcionado en la carpeta servlet. Añádalo a su proyecto, reconstruya la aplicación y pruébela.
 
 -----

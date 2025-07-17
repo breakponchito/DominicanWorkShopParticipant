@@ -1,65 +1,59 @@
-package fish.payara.dominican.workshop.dominicanworkshop.service;
+package fish.payara.dominican.workshop.dominicanworkshop.views;
 
-import jakarta.enterprise.context.RequestScoped;
+import fish.payara.dominican.workshop.dominicanworkshop.entities.Author;
+import fish.payara.dominican.workshop.dominicanworkshop.entities.Book;
+import fish.payara.dominican.workshop.dominicanworkshop.service.CatalogService;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.time.LocalDate;
+import java.io.Serializable;
+import java.util.List;
 
-@RequestScoped
-@Named
-public class BookView {
 
-    private String title;
-    private String isbn;
-    private String description;
-    private LocalDate publicationDate;
-    private double price;
-    private String imageName;
+@ViewScoped
+@Named("bookView")
+public class BookView implements Serializable {
 
-    public String getTitle() {
-        return title;
+    private Book book = new Book();
+    private Author author = new Author();
+    
+    @Inject
+    private transient CatalogService catalogService;
+    
+    public Book getBook() {
+        return book;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
+    
+    public Author getAuthor() {
+        return author;
     }
-
-    public String getIsbn() {
-        return isbn;
+    
+    public List<Book> getBooks() {
+        return catalogService.getAllBooks();
     }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    
+    public  String saveBook(){
+        book.setAuthor(author);
+        
+        if(book.getId() == null) {
+            catalogService.createBook(book);
+        } else {
+            catalogService.editBook(book);
+        }
+        book = new Book();
+        author = new Author();
+        return "book";
     }
-
-    public String getDescription() {
-        return description;
+    
+    public String deleteBook(Book book) {
+        catalogService.deleteBook(book.getId());
+        catalogService.deleteAuthor(book.getAuthor().getId());
+        return "book";
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDate publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    
+    public String editBook(Book book) {
+        this.book = book;
+        this.author = book.getAuthor();
+        return null;
     }
 }

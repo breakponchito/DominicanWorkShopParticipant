@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                template="/WEB-INF/layout/template.xhtml">
+    <h:messages id="messagesOutDetailsOwner" showDetail="true" closable="true"/>
+    
+    <ui:define name="content">
+        <h:form>
+            <h3>Book</h3>
+            <p>Represents a book for the catalog.</p>
+            <h:panelGrid id="bookInfo" columns="2">
+                <h:outputLabel for="title" value="Title:"/>
+                <h:inputText id="title" label="Title:" value="#{bookView.book.title}"/>
+                <h:outputLabel for="description" value="Description:" />
+                <h:inputText id="description" label="Description:" value="#{bookView.book.description}"/>
+                <h:outputLabel for="isbn" value="ISBN:" />
+                <h:inputText id="isbn" label="ISBN:" value="#{bookView.book.isbn}"/>
+                <h:outputLabel for="publicationDate" value="Publication Date:" />
+                <h:inputText id="publicationDate" label="Publication Date:" value="#{bookView.book.publicationDate}">
+                    <f:converter converterId="localDateConverter"/>
+                </h:inputText>
+                <h:outputLabel for="price" value="Price:" />
+                <h:inputText id="price" label="Price:" value="#{bookView.book.price}" />
+                <h:outputLabel for="imageName" value="Image Name:" />
+                <h:inputText id="imageName" label="Image Name:" value="#{bookView.book.imageName}" />
+            </h:panelGrid>
+            <h:panelGrid id="authorInfo" columns="2">
+                <h:outputLabel for="name" value="Author Name:" />
+                <h:inputText id="name" label="Author Name" value="#{bookView.author.name}" />
+                <h:outputLabel for="age" value="Author Age:" />
+                <h:inputText id="age" label="Author Age:" value="#{bookView.author.age}" />
+                <h:outputLabel for="street" value="Street:" />
+                <h:inputText id="street" label="Street" value="#{bookView.author.street}" />
+                <h:outputLabel for="city" value="City:" />
+                <h:inputText id="city" label="City:" value="#{bookView.author.city}" />
+                <h:outputLabel for="state" value="State:" />
+                <h:inputText id="state" value="#{bookView.author.state}" />
+                <h:outputLabel for="zip" value="Zip:" />
+                <h:inputText id="zip" label="Zip:" value="#{bookView.author.zip}" />
+            </h:panelGrid>
+            <h:commandButton value="Save" action="#{bookView.saveBook}" styleClass="btn btn-primary mt-3"/>
+
+            <h3 class="mt-5">Book List</h3>
+            <h:dataTable value="#{bookView.getBooks()}" var="book" border="1" styleClass="table table-striped table-bordered">
+                <h:column>
+                    <f:facet name="header">Book ID</f:facet>
+                    #{book.id}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Title</f:facet>
+                    #{book.title}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    #{book.description}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ISBN</f:facet>
+                    #{book.isbn}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandButton value="Edit" action="#{bookView.editBook(book)}"/>
+                    |
+                    <h:commandButton value="Delete" action="#{bookView.deleteBook(book)}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
