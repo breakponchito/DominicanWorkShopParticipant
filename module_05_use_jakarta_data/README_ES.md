@@ -109,6 +109,193 @@ public interface EmployeeRepository {
 }
 ```
 
+Aquí está la lista de anotaciones y tipos proporcionados por Jakarta Data:
+
+| Anotación | Descripción |
+|---|---|
+| @Find | La anotación Find indica que el método de repositorio anotado ejecuta una consulta para recuperar entidades basándose en sus parámetros y en los argumentos asignados a sus parámetros. El tipo de retorno del método identifica el tipo de entidad devuelto por la consulta. |
+| @Save | La anotación Save indica que el método de repositorio anotado acepta una o más entidades y, para cada entidad, agrega su estado a la base de datos o actualiza el estado ya existente en la base de datos. |
+| @Insert | La anotación Insert indica que el método de repositorio anotado agrega el estado de una o más entidades a la base de datos. |
+| @Delete | La anotación Delete indica que el método de repositorio anotado elimina el estado de una o más entidades de la base de datos. |
+| @Update | La anotación Update indica que el método de repositorio anotado actualiza el estado de una o más entidades ya existentes en la base de datos. |
+| @Query | Anota un método de repositorio como un método de consulta, especificando una consulta escrita en Jakarta Data Query Language (JDQL) o en Jakarta Persistence Query Language (JPQL). |
+| @OrderBy | Anota un método de repositorio para solicitar la ordenación de los resultados. Cuando se especifican múltiples anotaciones OrderBy en un método de repositorio, la precedencia para la ordenación sigue el orden en que se especifican las anotaciones OrderBy, y después de eso sigue cualquier criterio de ordenación que se suministre dinámicamente por los parámetros Sort o por cualquier parámetro Order. |
+| @By | Anota un parámetro de un método de repositorio, especificando un mapeo a un campo persistente. |
+| @Param | Anota un parámetro de un método de repositorio para vincularlo a un parámetro con nombre de una consulta. |
+
+Ejemplo para la anotación @Find:
+
+```java
+ @Repository
+ interface Garage {
+     @Find
+     List<Car> getCarsWithModel(@By("model") String model);
+ }
+```
+
+Ejemplo para la anotación @Save:
+
+```java
+ @Repository
+ interface Garage {
+     @Save
+     Car park(Car car);
+ }
+```
+
+Ejemplo para la anotación @Insert:
+
+```java
+ @Repository
+ interface Garage {
+     @Insert
+     Car park(Car car);
+ }
+```
+
+Ejemplo para la anotación @Delete:
+
+```java
+ @Repository
+ interface Garage {
+     @Delete
+     void unpark(Car car);
+ }
+```
+
+Ejemplo para la anotación @Update:
+
+```java
+ @Repository
+ interface Garage {
+     @Update
+     Car update(Car car);
+ }
+```
+
+Ejemplo para la anotación @Query:
+
+```java
+ @Repository
+ public interface People extends CrudRepository<Person, Long> {
+
+    // JDQL con parámetros posicionales
+    @Query("where firstName = ?1 and lastName = ?2")
+    List<Person> byName(String first, String last);
+}
+```
+
+Ejemplo para la anotación @OrderBy:
+
+```java
+ @OrderBy("lastName")
+ @OrderBy("firstName")
+ @OrderBy("id")
+ Person[] findByZipCode(int zipCode, PageRequest pageRequest);
+```
+
+Ejemplo para la anotación @By:
+
+```java
+ @Repository
+ public interface People {
+
+     @Find
+     Person findById(@By(ID) String id); // se mapea a Person.ssn
+
+     @Find
+     List<Person> findNamed(@By("firstName") String first,
+                            @By("lastName") String last);
+
+ }
+```
+
+Ejemplo para la anotación @Param:
+
+```java
+    @Query("where firstName like :fistName order by firstName asc")
+    Stream<Person> findPersonWithQueryWithErrorParamName(@Param("fistName") String firstName);
+```
+
+#### Otras características de Jakarta Data
+
+Además, de toda la funcionalidad anterior proporcionada por las anotaciones, Jakarta Data ofrece otra funcionalidad que puede ser útil para simplificar la implementación de aplicaciones:
+
+| Característica | Descripción | Tipos |
+|---|---|---|
+| Modo de paginación por desplazamiento (offset) | La paginación por desplazamiento es un método popular para gestionar y recuperar grandes conjuntos de datos de manera eficiente. Se basa en dividir el conjunto de datos en páginas que contienen un número específico de elementos. Este método permite a los desarrolladores recuperar un subconjunto del conjunto de datos identificando el número de página y el número máximo de elementos por página. | Page\<?\>, PageRequest |
+| Modo de paginación por cursor | La paginación basada en cursor tiene como objetivo reducir los resultados perdidos y duplicados entre páginas consultando en relación con los valores observados de las propiedades de la entidad que constituyen los criterios de ordenación. | CursoredPage\<?\>, PageRequest, PageRequest.Cursor |
+| Consulta dinámica por nombre de método | En Query by Method Name, una consulta se expresa a través de un conjunto de convenciones de nomenclatura de métodos. | |
+
+Ejemplo de modo de paginación por desplazamiento:
+
+```java
+    @Query("where firstName like :firstName order by firstName asc")
+    Page<Person> findPersonWithQueryAndMakePaginationFromWhere(String firstName, PageRequest pageRequest, Order<Person> sortBy);
+
+    @Inject
+    PersonRepository repository;
+
+    Page<Person> page = respository.findPersonWithQueryAndMakePaginationFromWhere("Alfonso", PageRequest.ofPage(1).ofSize(2), Order.by(Sort.asc("lastName")));
+```
+
+Ejemplo de modo de paginación por cursor:
+
+```java
+    @Find
+    CursoredPage<Person> findPersonPagWithCursorPage(@By("firstName") String name,
+                                                     PageRequest pageRequest,
+                                                     Order<Person> sorts);
+
+    @Inject
+    PersonRepository repository;
+
+    Order<Person> order = Order.by(Sort.asc("age"));
+    PageRequest pageRequest = PageRequest.ofSize(size);
+    //pageRequest = PageRequest.afterCursor(PageRequest.Cursor.forKey(20),1,1, true);
+    CursoredPage<Person> p = personPaginationRepository.findPersonPagWithCursorPage(firstName, pageRequest, order);
+    pageRequest = p.previousPageRequest();
+    CursoredPage<Person> before = personPaginationRepository.findPersonPagWithCursorPage(firstName, pageRequest, order);
+    pageRequest = p.nextPageRequest();
+    CursoredPage<Person> next = personPaginationRepository.findPersonPagWithCursorPage(firstName, pageRequest, order);
+```
+
+Ejemplo de consulta por nombre de método:
+
+```java
+@Repository
+public interface CompanyRepository extends BasicRepository<Company, Long> {
+    List<Company> findByAddressCity(String city);
+
+    void deleteByName(String companyName);
+
+    long deleteByAddress_City(String city);
+
+    long countByAddress_City(String city);
+
+    boolean existsByName(String name);
+}
+```
+
+-----
+#### **Tarea**
+
+To test previous concepts now is time to experiment. Copy the files added on the folder: entity, repository and resource from this module to your project. Then check the details of the implementation and test the following endpoints:
+
+Para probar los conceptos que hemos visto es necesario que copies los archivos colocados en los folders: entity, repository y resource desde los fuentes de este módulo hacia tu proyecto. Después de copiarlos revisa la implementation y prueba los siguientes endpoints:
+
+- /rest/personas/insertPersonasRandom/{numberOfPersons}
+- /rest/personas/findAll
+- /rest/personas/findPersonsAndMakePaginationWithOderOfName/{page}/{size}/{attributeName}/{order}
+- /rest/personas/findPersonWithQueryAndMakePagination/{firstName}/{page}/{size}/{attribute}/{order}
+- /rest/personas/findPersonPagWithCursorPage/{firstName}/{size}
+- /rest/personas/findPersonPagWithCursorPageSpecificCursorCustomValue/{firstName}/{size}/{age}
+- rest/personas/findByFirstName/{firstName}
+
+order puede tener el valor ASC o DESC
+
+-----
+
 -----
 
 #### **Tarea**
