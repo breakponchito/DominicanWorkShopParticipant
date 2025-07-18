@@ -11,8 +11,8 @@ Vamos a empezar a crear nuestra aplicación base usando el **Jakarta EE starter*
 ![Jakarta EE Starter](img/jakartaEEStarter.png)
 
 -----
+**NOTA:**
 
-**NOTA**
 En este momento, solo el tiempo de ejecución de Open Liberty está disponible para la configuración de inicio de Jakarta 11. Para el Taller, deberíamos seleccionar las siguientes opciones:
 
 - Versión de Jakarta EE: Jakarta EE 11
@@ -100,13 +100,16 @@ Añade la dependencia a tu `pom.xml` y verifica si el problema de referenciar el
 
 -----
 
-Para las otras propiedades añadidas en el archivo `persistence.xml`, esta es una explicación de lo que hace cada una:
-etiquetas:
+Para las otras propiedades añadidas en el archivo `persistence.xml`, esta es una explicación de lo que hace cada una.
+
+##### Etiquetas
 
 - `persistence-unit`: con esta etiqueta podemos indicar el nombre de la unidad de persistencia e indicar si necesitamos gestionar transacciones con el modo JTA
 - `provider`: indica la implementación del proveedor para JPA, en nuestro caso EclipseLink
 - `jta-data-source`: indica el nombre de la fuente de datos a usar con el modo JTA, en nuestro caso la fuente de datos predeterminada de Payara Server.
-  propiedades
+
+#### Propiedades
+
 - `eclipselink.ddl-generation`: esta propiedad indica la forma de crear tablas, en nuestro caso, usaremos el valor `drop-and-create-tables`. Para referencia, consulta el siguiente enlace: **[Generación DDL de EclipseLink](https://eclipse.dev/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm)**
 - `eclipselink.logging.level`: para verificar los logs de la implementación de EclipseLink, en nuestro caso INFO. Para referencia, consulta el siguiente enlace: **[Nivel de Log de EclipseLink](https://eclipse.dev/eclipselink/documentation/2.5/jpa/extensions/p_logging_level.htm)**
 
@@ -258,8 +261,8 @@ Mi archivo `persistence.xml` final se ve así:
 ![Edit Persistence for Unit Testing](img/persistenceWithAdditionalPersistenceUnit.png)
 
 -----
+**NOTA:**
 
-**NOTA**
 Dado que estamos añadiendo más de una unidad de persistencia en nuestra configuración, es importante actualizar todos los lugares donde se inyecta el `PersistenceContext` e indicar el nombre de la unidad de persistencia a usar, por ejemplo:
 
 ```java

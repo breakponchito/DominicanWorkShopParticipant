@@ -16,7 +16,8 @@ For Jakarta RESTful Web Services 4.0 we have multiple implementations showed on 
 | Eclipse Jersey | 4.0.0-M2    |
 
 ---
-**NOTE**
+**NOTE:**
+
 This list is not final because this spec was recently released for Jakarta 11 and other new implementations can be listed in feature. Payara Server is using Eclipse Jersey because is the reference implementation.
 
 ---
@@ -228,7 +229,8 @@ curl "http://localhost:8080/myapplication/api/hello-world?name=Alfonso&lastName=
 ```
 
 ---
-**NOTE**
+**NOTE:**
+
 The **&** on curl request is interpreted as a separation of commands or run a command in background it depends on the kind of shell.
 To use correctly for our request enclose the entire URL with double quotes.
 

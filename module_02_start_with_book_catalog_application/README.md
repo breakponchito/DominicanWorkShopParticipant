@@ -14,7 +14,8 @@ book catalog. Here is the link of the Jakarta Starter: [Jakarta Starter](https:/
 ![Jakarta EE Starter](img/jakartaEEStarter.png)
 
 ---
-**NOTE**
+**NOTE:**
+
 At this moment only Open Liberty runtime is available for the starter configuration for Jakarta 11. For the Workshop we should need to select the following options:
 - Jakarta EE version: Jakarta EE 11
 - Jakarta EE profile: Core Profile
@@ -22,6 +23,7 @@ At this moment only Open Liberty runtime is available for the starter configurat
 - Runtime: None
 - Docker support: No
 - Group/Artifact: use a name related to a book catalog or book store
+
 ---
 
 After that, you can decompress on any location of your local environment, here is an example of the structure of the folders:
@@ -95,12 +97,16 @@ Add the dependency to your pom.xml and see if the issue for referencing the pack
 
 -----
 
-For the other properties added on the persistence.xml this is an explanation of what is doing each of them:
-tags:
+For the other properties added on the persistence.xml this is an explanation of what is doing each of them.
+
+#### Tags
+
 - persistence-unit: with this tag we can indicate the name of the persistence unit and indicate if we need to manage transactions with mode JTA
 - provider: indicating the provider implementation for JPA, for our case EclipseLink
 - jta-data-source: indicate the name of the datasource to use with the mode JTA, in our case the default datasource from Payara Server.
-properties
+
+#### Properties
+
 - eclipselink.ddl-generation: this property indicates the way to create tables, in our case, we will use the value drop-and-create-tables. For reference, check the following link: [Eclipse Link ddl generation](https://eclipse.dev/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm)
 - eclipselink.logging.level: to verify logs from eclipselink implementation, for our case INFO. For reference, check the following link: [Eclipse Link Logging Level](https://eclipse.dev/eclipselink/documentation/2.5/jpa/extensions/p_logging_level.htm)
 
@@ -249,7 +255,8 @@ My final persistence.xml file looks as follows:
 ![Edit Persistence for Unit Testing](img/persistenceWithAdditionalPersistenceUnit.png)
 
 ---
-**NOTE**
+**NOTE:**
+
 How we are adding more than one persistence unit on our configuration it is important to update all the places where the PersistenceContext is injected and update indicating the name of the persistence unit to use, for example: 
 
 ```java

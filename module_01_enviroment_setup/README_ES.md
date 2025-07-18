@@ -58,8 +58,10 @@ Revisa el resultado en la misma ventana de la terminal.
 ![Payara Server Startup](img/payaraServerStartup.png)
 
 ---
-**NOTE** 
+**NOTA:**
+
 Puedes añadir las opciones **-v** para habilitar el modo verboso y ver los logs del Payara Server, y si quieres depurar, necesitas usar la opción **-d** para habilitar el puerto 9090 y adjuntar el depurador.
+
 ----
 
 Después de iniciar el Payara Server, podemos ir a la consola de administración para revisar que el servidor esté funcionando. Para hacerlo, abre una nueva pestaña en tu navegador y coloca la siguiente URL: **localhost:4848**
@@ -73,8 +75,10 @@ asadmin stop-domain
 ```
 
 ---
-**NOTE** 
+**NOTA:**
+
 Si usas la opción **-v**, necesitas abrir una nueva terminal para ejecutar el comando anterior.
+
 ---
 
 ## Base de Datos H2
@@ -107,11 +111,11 @@ Después de esto, tu navegador predeterminado abrirá la consola administrativa 
 
 ![H2 Administrative console](img/administrativeConsoleH2Local.png)
 
-Para conectarte, no necesitas usar contraseña, ya que la base de datos predeterminada nunca establece una contraseña desde la configuración predeterminada. Al conectar, verás la base de datos de prueba predeterminada.
+Para conectarte, no necesitas usar contraseña, ya que la base de datos predeterminada nunca establece una contraseña desde la configuración. Al conectar, verás la base de datos de prueba.
 
 ![H2 Connected](img/administrativeConsoleH2Running.png)
 
-Para este Taller, podemos hacer una conexión desde nuestro IDE si necesitamos acceder a las tablas resultantes de la configuración de nuestras entidades para nuestra aplicación. Podemos hacer esto con los siguientes pasos:
+Para este Taller, podemos hacer una conexión desde nuestro IDE si necesitamos acceder a las tablas resultantes de la configuración de nuestras entidades. Podemos hacer esto con los siguientes pasos:
 
 1.  Obtener el Driver de H2 e instalarlo en tu entorno local (Si estás usando un IDE, la mayoría de los IDE actuales vienen con algunos drivers; puedes verificar si el Driver de H2 está disponible para tu IDE; si no, obténlo).
 2.  Crear una conexión de fuente de datos usando la siguiente URL:

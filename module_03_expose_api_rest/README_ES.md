@@ -16,7 +16,8 @@ Para Jakarta RESTful Web Services 4.0, tenemos múltiples implementaciones mostr
 | Eclipse Jersey | 4.0.0-M2    |
 
 ---
-**NOTA**
+**NOTA:**
+
 Esta lista no es definitiva porque esta especificación fue lanzada recientemente para Jakarta 11 y otras nuevas implementaciones pueden ser listadas en el futuro. Payara Server está usando Eclipse Jersey porque es la implementación de referencia.
 
 ---
@@ -235,8 +236,8 @@ curl "http://localhost:8080/myapplication/api/hello-world?name=Alfonso&lastName=
 ```
 
 -----
+**NOTA:**
 
-**NOTA**
 El **&** en una solicitud cURL se interpreta como una separación de comandos o para ejecutar un comando en segundo plano, depende del tipo de shell.
 Para usarlo correctamente para nuestra solicitud, encierre la URL completa entre comillas dobles.
 
@@ -333,7 +334,7 @@ Esta es la última tarea del módulo. Exponga la funcionalidad como un servicio 
 
 -----
 
-# Conclusión del Módulo 2
+# Conclusión del Módulo 3
 
 Esto es lo aprendido al término del módulo:
 

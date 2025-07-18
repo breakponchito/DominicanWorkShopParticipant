@@ -280,9 +280,7 @@ public interface CompanyRepository extends BasicRepository<Company, Long> {
 -----
 #### **Tarea**
 
-To test previous concepts now is time to experiment. Copy the files added on the folder: entity, repository and resource from this module to your project. Then check the details of the implementation and test the following endpoints:
-
-Para probar los conceptos que hemos visto es necesario que copies los archivos colocados en los folders: entity, repository y resource desde los fuentes de este módulo hacia tu proyecto. Después de copiarlos revisa la implementation y prueba los siguientes endpoints:
+Para probar los conceptos que hemos visto es necesario que copies los archivos colocados en los folders: entity, repository y resource desde los archivos fuente de este módulo hacia tu proyecto. Después de copiarlos revisa la implementation y prueba los siguientes endpoints:
 
 - /rest/personas/insertPersonasRandom/{numberOfPersons}
 - /rest/personas/findAll
@@ -305,7 +303,8 @@ Ahora tu tarea es implementar un patrón de repositorio usando Jakarta Data para
 -----
 
 ---
-**NOTE**
+**NOTE:**
+
 Para que este módulo ejecute la aplicación, es necesario comentar la segunda unidad de persistencia declarada en el archivo persistence.xml y deshabilitar la prueba unitaria que se agregó en un módulo previo. Esto evitará problemas al intentar ejecutar la aplicación.
 
 ---

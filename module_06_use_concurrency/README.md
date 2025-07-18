@@ -24,7 +24,7 @@ The base implementation of this specification provides a managed version of the 
 By adding the implementation of this, we are gaining a lot of benefits, some of them are the following:
 
 - Reduced boilerplate code and complexity: With this layer of managed services now is straightforward to use and implement on our daily basis, inject the resources when you need and use on your specific components.
-- Compatibility with the Java SE Concurrency: As we said this spec is on top of the Java SE implementation providing the most recent additions for Concurrence, we will see how to use Virtual Threads more later.
+- Compatibility with the Java SE Concurrency: As we said this spec is on top of the Java SE implementation providing the most recent additions for Concurrency, we will see how to use Virtual Threads more later.
 - Improved performance and Responsiveness: By offloading long-running tasks to background threads, applications can remain responsive to user interactions.
 - Better resource utilization: Efficiently uses available CPU cores by executing multiple tasks concurrently.
 - Container Integrity: Ensures that concurrent operations respect the container's environment and don't lead to resource leaks or security vulnerabilities.
@@ -53,8 +53,10 @@ Let's start with the ManagedExecutorService. This will help us to execute tasks 
 ```
 
 ---
-**NOTE**
+**NOTE:**
+
 For Concurrency 3.1 now you can use the annotation @Inject to inject the resources
+
 ---
 
 then we can use that executor to send the work to new threads, look at the following example:
@@ -140,7 +142,7 @@ And, the ManagedScheduledExecutorService. This will help us to define a task to 
     private ManagedScheduledExecutorService managedScheduledExecutorService;
 ```
 
-Then we can use the ManagedScheduleExecutorService. The first example show how to send a task at a specified time, after a delay:
+Then we can use the ManagedScheduleExecutorService. The first example shows how to send a task at a specified time, after a delay:
 
 ```java
     @GET
@@ -194,7 +196,7 @@ Then you can use the Trigger interface to save the reference of the CronTrigger 
 
 From the previous example, we can see that we configured a CronTrigger to be executed every second and the task will use the trigger as the configuration. The task will increment a number and will print a message. Then we controlled the execution with a delay of 10,000 milliseconds to permit the task work and print and increment the number 10 times. When finished, we can get the number incremented with value of 10.
 
-Now is the time for the ForkAndJoinPool implementation. The ForkAndJoinPool is useful when you have a task that needs to process a bunch of data, and you want to divide the work (divide and conquer) in atomic units to be processed with the number of available processors from your environment. This implies to make parallel work and in some momento join all the results. For this, you need to implementa a ForkJoinTask of the type RecursiveAction without returning results or RecursiveTask to return results. In the following example, you will see how to use.
+Now is the time for the ForkAndJoinPool implementation. The ForkAndJoinPool is useful when you have a task that needs to process a bunch of data, and you want to divide the work (divide and conquer) in atomic units to be processed with the number of available processors from your environment. This implies to make parallel work and at some moment join all the results. For this, you need to implementa a ForkJoinTask of the type RecursiveAction without returning results or RecursiveTask to return results. In the following example, you will see how to use.
 
 We need to use the ManagedThreadFactory to provide to the ForkJoinPool the source of the threads to be used by the implementation:
 
@@ -328,11 +330,11 @@ With all of this information now is your turn to experiment. That is why your jo
 
 #### Define your custom resource
 
-With Payara, you can create your custom resources by using Admin Console or with Admin commands. In the following examples, you will see how to do that within Payara Server.
+With Payara, you can create your custom resources by using Admin Console, Admin commands or with annotations. In the following examples, you will see how to do that within Payara Server.
 
 ##### Context Service
 
-You can add a custom resource using Admin Console or by Admin commands. If you want to add the custom resource for ContextService then you need to go to option Menu ***Resources -> Concurrent Resources -> Context Service*** on the left side of the Payara Server Home:
+You can add a custom resource using Admin Console, Admin commands or by annotation. If you want to add the custom resource for ContextService then you need to go to option Menu ***Resources -> Concurrent Resources -> Context Service*** on the left side of the Payara Server Home:
 
 ![Resources Menu](img/resourcesMenu.png)
 
@@ -375,7 +377,26 @@ if you need to delete the resource, you can do by the following command:
 asadmin delete-context-service concurrent/Context1
 ```
 
-As you can see, it is easy to interact with the two modes with the resources. Finally, if you need to use in your code the new resource you need to inject and locate with specific JNDI name as follows:
+Last but not least, we can create the resource using annotations, here the example:
+
+```java
+        @ContextServiceDefinition(
+        name = "java:comp/concurrent/MyExecutorContext",
+        propagated = { SECURITY, APPLICATION })
+        @Path("/concurrency")
+        public class ConcurrencyResource {
+            ..... 
+            .....
+        }
+```
+This annotation can be applied to a type, and with this the resource can be used to define other resources or can be injected as follows:
+
+```java
+        @Resource(lookup = "java:comp/concurrent/MyExecutorContext")
+        private ContextService contextService;
+```
+
+As you can see, it is easy to interact with the three modes with the resources. Finally, if you need to use in your code the new resource you need to inject and locate with specific JNDI name as follows:
 
 ```java
     @Resource(name = "concurrent/ContextFromConsole")
@@ -386,7 +407,7 @@ that is enough to inject the resource and use your code.
 
 ##### Managed Thread Factories, Managed Executor Service and Scheduled Executor Services
 
-As we can see with ContextService, we can do the same for the other categories of the resources. Open the option you need from the console and create the resource. The recommendation is to use a name corresponding to the resource to easily identify:
+As we saw with ContextService, we can do the same for the other categories of the resources. Open the option you need from the console and create the resource. The recommendation is to use a name corresponding to the resource to easily identify:
 
 ![Other options expanded](img/otherOptionsExpanded.png)
 
@@ -408,6 +429,30 @@ Managed Thread Factory commands:
 |asdmin> set resources.managed-thread-factory.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Thread Factory using JNDI name |
 |asadmin> delete-managed-thread-factory concurrent/Factory1| Deletes the specified Managed Thread Factory with the JNDI name          |
 
+And the annotation to create the resource as follows:
+
+````java
+        @ManagedThreadFactoryDefinition(
+        name = "java:comp/concurrent/MyThreadFactory",
+        context = "java:comp/concurrent/MyExecutorContext",
+        priority = 4)
+        @Path("/concurrency")
+        public class ConcurrencyResource {
+            .....
+            .....
+        }
+````
+
+to inject use the name on the resource annotation:
+
+````java
+        @Resource(lookup = "java:comp/concurrent/MyThreadFactory")
+        private ManagedThreadFactory managedThreadFactory;
+````
+
+If you need to check the API documentation, go to the following link: [ManagedThreadFactoryDefinition](https://jakarta.ee/specifications/platform/11/apidocs/jakarta/enterprise/concurrent/managedthreadfactorydefinition)
+
+
 Managed Executor Services commands:
 
 | Command | Action                                                                   |
@@ -417,6 +462,30 @@ Managed Executor Services commands:
 |asdmin> get resources.managed-executor-service.{resource-JNDI-name}.*| Get the Managed Executor Service properties from the specified JNDI name |
 |asdmin>  set resources.managed-executor-service.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Executor Service using JNDI name |
 |asadmin> delete-managed-executor-service concurrent/Executor1| Deletes the specified Managed Executor Service with the JNDI name          |
+
+And the annotation to create the resource as follows:
+
+````java
+        @ManagedExecutorDefinition(
+        name = "java:comp/concurrent/MyExecutor",
+        context = "java:comp/concurrent/MyExecutorContext",
+        hungTaskThreshold = 120000,
+        maxAsync = 5)
+        @Path("/concurrency")
+        public class ConcurrencyResource {
+            .....
+            .....
+        }
+````
+
+to inject use the name on the resource annotation:
+
+````java
+        @Resource(lookup = "java:comp/concurrent/MyExecutor")
+        private ManagedExecutorService managedExecutorService;
+````
+
+If you need to check the API documentation, go to the following link: [ManagedExecutorDefinition](https://jakarta.ee/specifications/platform/11/apidocs/jakarta/enterprise/concurrent/managedexecutordefinition)
 
 Managed Scheduled Executor Services:
 
@@ -428,7 +497,31 @@ Managed Scheduled Executor Services:
 |asdmin> set resources.managed-scheduled-executor-service.{resource-JNDI-name}.deployment-order=120| Set the specified property to the Managed Scheduled Executor Service using JNDI name         |
 |asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1| Deletes the specified Managed Scheduled Executor Service with the JNDI name                  |
 
-To inject each of them, use resource annotation like follows:
+And the annotation to create the resource as follows:
+
+````java
+        @ManagedScheduledExecutorDefinition(
+        name = "java:comp/concurrent/MyScheduledExecutor",
+        context = "java:comp/concurrent/MyExecutorContext",
+        hungTaskThreshold = 30000,
+        maxAsync = 3)
+        @Path("/concurrency")
+        public class ConcurrencyResource {
+            .....
+            .....
+        }
+````
+
+to inject use the name on the resource annotation:
+
+````java
+        @Resource(lookup = "java:comp/concurrent/MyScheduledExecutor")
+        private ManagedScheduledExecutorService managedScheduledExecutorService;
+````
+
+If you need to check the API documentation, go to the following link:[ManagedScheduledExecutorDefinition](https://jakarta.ee/specifications/platform/11/apidocs/jakarta/enterprise/concurrent/managedscheduledexecutordefinition)
+
+In case you execute the command to create the resource, use the following to inject each of them:
 
 ```java
     @Resource(name = "concurrent/Factory1")
@@ -448,7 +541,9 @@ To inject each of them, use resource annotation like follows:
 
 -----
 #### **Task**
-Use the commands to create custom resources for each of them. Use the custom resources instead of the default ones.
+
+Choose an option from the previous section to generate your custom resources and provide into your application.
+
 -----
 
 #### What is Virtual Threads?
@@ -473,9 +568,11 @@ As you can see when interacting with the Admin console and when working to creat
 Another option we can use to make this is with commands. The following commands show you how you can enable virtual threads with commands:
 
 ```java
-asadmin> create-managed-executor-service concurrent/Executor1
+asadmin> create-managed-executor-service --usevirtualthreads concurrent/Executor1
 ```
-then get the properties to list available options
+You can use the new option --uservirtualthreads for the commands: create-managed-executor-service, create-managed-scheduled-executor-service and create-managed-thread-factory to indicate that the resource will use that functionality, remember that this depends on your runtime JDK. If you don't use JDK 21, this option only generates normal threads, without affecting the system.
+
+If you want to change an available resource, use the get and set option to set the virtual threads enabled. Check the following commands:
 
 ```java
 asdmin> get resources.managed-executor-service.concurrent/Executor1.*

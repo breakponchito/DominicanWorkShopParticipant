@@ -302,7 +302,8 @@ Now your task is to implement a repository pattern using Jakarta Data for an ent
 -----
 
 ---
-**NOTE**
+**NOTE:**
+
 For this module to run the application it is needed to comment the second persistence unit declared on the persistence.xml and disable the unit test created on the previous module. Do that to prevent any issues when trying to run the application.
 
 ---

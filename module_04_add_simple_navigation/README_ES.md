@@ -218,7 +218,6 @@ Construye tu aplicación, despliégala y prueba la página de detalles. Aquí ti
 Esta es la última parte del módulo para integrar más operaciones para el catálogo, con el fin de insertar, eliminar y actualizar la información disponible para los libros en nuestra base de datos. Realiza la siguiente tarea para tener esa funcionalidad en tu aplicación.
 
 -----
-
 #### **Tarea**
 
 Copia el siguiente archivo a tu aplicación en la carpeta `webapp`: `book.xhtml`.
@@ -227,7 +226,7 @@ Necesitarás clases adicionales para tu proyecto que también se proporcionan en
 
 ![Admin View](img/adminView.png)
 
-Desde esta interfaz se pueden realizar las operaciones de administración de la entidad Book, interactua con ella y revisa la implementación. Otro objetivo que puedes realizar es insertar más registros a la base de datos utilizando la interfaz UI que se acaba de realizar o por medio the un servicio REST utilizando metodo POST. Si requieres información para insertar más libros ve al archivo bookinfo.txt y observa los datos, de aquí puedes obtener para crear nuevos, si requieres generar direcciones random ve al link siguiente que es un servicio gratuito para generar direcciones random: [Random Address Generator](https://www.fakepersongenerator.com/random-address)
+Desde esta interfaz se pueden realizar las operaciones de administración de la entidad Book, interactua con ella y revisa la implementación. Otro objetivo que puedes realizar es insertar más registros a la base de datos utilizando la interfaz UI que se acaba de realizar o por medio de un servicio REST utilizando método POST. Si requieres información para insertar más libros ve al archivo bookinfo.txt y observa los datos, de aquí puedes obtener para crear nuevos, si requieres generar direcciones random ve al link siguiente que es un servicio gratuito para generar direcciones random: [Random Address Generator](https://www.fakepersongenerator.com/random-address)
 
 Para evitar un estado no válido en los campos de la interfaz de usuario tras actualizar un libro desde la interfaz, copie el filtro proporcionado en la carpeta servlet. Añádalo a su proyecto, reconstruya la aplicación y pruébela.
 
