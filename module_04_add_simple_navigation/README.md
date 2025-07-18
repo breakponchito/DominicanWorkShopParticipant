@@ -116,6 +116,12 @@ If you don't have data on your table, open module 2 and go to the sql folder, op
 
 ![Inserting Data](img/insertingData.png)
 
+After doing this insert operation to the tables, please execute the following sql to move the sequence and prevent any future issues with the primary key.
+
+```sql
+    UPDATE SEQUENCE SET SEQ_COUNT = 6 where SEQ_NAME='SEQ_GEN'
+```
+
 Rebuild the application and deploy, now open the menu page and select the Catalog option:
 
 ![Menu App](img/menuApp.png)

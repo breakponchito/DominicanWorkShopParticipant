@@ -119,6 +119,14 @@ Si no tienes datos en tu tabla, abre el **módulo 2** y ve a la carpeta `sql`, a
 
 ![Inserting Data](img/insertingData.png)
 
+After doing this insert operation to the tables, please execute the following sql to move the sequence and prevent any future issues with the primary key.
+
+Después de realizar el insert de datos, ejecuta el siguiente script para actualizar la secuencia. Esto ayudará a prevenir un error cuando estemos insertando datos desde la interfaz.
+
+```sql
+    UPDATE SEQUENCE SET SEQ_COUNT = 6 where SEQ_NAME='SEQ_GEN'
+```
+
 Reconstruye la aplicación y despliégala. Ahora abre la página de menú y selecciona la opción **Catalog**:
 
 ![Menu App](img/menuApp.png)
