@@ -121,8 +121,8 @@ This configuration component doesn't need to specify any method and can be locat
 
 -----
 #### **Task**
-
 Now is the time to experiment. From the base application we are implementing create the first RESTful Web Service providing all the components that are required to make it work. Remember that by default, The Jakarta Starter creates one resource and configuration for a REST service. Review those components and edit as required, also copy the example we showed here to make a simple GET and POST call.
+
 -----
 
 #### Defining Client application

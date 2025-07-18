@@ -123,10 +123,10 @@ public class BookStoreApplication extends Application {
 Este componente de configuración no necesita especificar ningún método y puede ubicarse en cualquier paquete y definirse solo una vez.
 
 -----
-
 #### **Tarea**
+Ahora es el momento de experimentar. A partir de la aplicación base que estamos implementando, cree el primer servicio web RESTful proporcionando todos los componentes necesarios para que funcione. Recuerda que, por defecto, Jakarta Starter crea un recurso y una configuración para un servicio REST. Revisa esos componentes y edítalos según sea necesario. Copia también el ejemplo que mostramos aquí para realizar una llamada GET y POST sencilla.
 
-## Ahora es el momento de experimentar. A partir de la aplicación base que estamos implementando, cree el primer servicio web RESTful proporcionando todos los componentes necesarios para que funcione. Recuerda que, por defecto, Jakarta Starter crea un recurso y una configuración para un servicio REST. Revisa esos componentes y edítalos según sea necesario. Copia también el ejemplo que mostramos aquí para realizar una llamada GET y POST sencilla.
+-----
 
 #### Definiendo la aplicación cliente
 
