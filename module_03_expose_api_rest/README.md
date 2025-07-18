@@ -18,7 +18,7 @@ For Jakarta RESTful Web Services 4.0 we have multiple implementations showed on 
 ---
 **NOTE:**
 
-This list is not final because this spec was recently released for Jakarta 11 and other new implementations can be listed in feature. Payara Server is using Eclipse Jersey because is the reference implementation.
+This list is not final because this spec was recently released for Jakarta 11 and other new implementations can be listed in feature. Payara Server is using Eclipse Jersey.
 
 ---
 
