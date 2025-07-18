@@ -303,7 +303,7 @@ Ahora tu tarea es implementar un patrón de repositorio usando Jakarta Data para
 -----
 
 ---
-**NOTE:**
+**NOTA:**
 
 Para que este módulo ejecute la aplicación, es necesario comentar la segunda unidad de persistencia declarada en el archivo persistence.xml y deshabilitar la prueba unitaria que se agregó en un módulo previo. Esto evitará problemas al intentar ejecutar la aplicación.
 

@@ -394,7 +394,7 @@ Por último, pero no menos importante, podemos crear el recurso usando anotacion
         }
 ```
 
-Esta anotación se puede aplicar a un tipo, y con esto el recurso se puede usar para definir otros recursos o se puede inyectar de la siguiente manera:
+Esta anotación se puede aplicar a un tipo en este caso la clase del recurso y se puede inyectar de la siguiente manera:
 
 ```java
         @Resource(lookup = "java:comp/concurrent/MyExecutorContext")
