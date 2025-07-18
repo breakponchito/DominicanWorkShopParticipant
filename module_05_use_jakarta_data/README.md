@@ -190,7 +190,7 @@ Example for the @OrderBy annotation:
  @OrderBy("lastName")
  @OrderBy("firstName")
  @OrderBy("id")
- Person[] findByZipCode(int zipCode, PageRequest pageRequest);
+ Person[] findByZipCode(int zipCode);
 ````
 
 Example for the @By annotation:
