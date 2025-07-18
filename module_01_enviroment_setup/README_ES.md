@@ -60,7 +60,7 @@ Revisa el resultado en la misma ventana de la terminal.
 ---
 **NOTA:**
 
-Puedes añadir las opciones **-v** para habilitar el modo verboso y ver los logs del Payara Server, y si quieres depurar, necesitas usar la opción **-d** para habilitar el puerto 9090 y adjuntar el depurador.
+Puedes añadir las opciones **-v** para habilitar el modo verboso y ver los logs del Payara Server, y si quieres depurar, necesitas usar la opción **-d** para habilitar el puerto 9009 y adjuntar el depurador.
 
 ----
 

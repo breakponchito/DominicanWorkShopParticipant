@@ -60,7 +60,7 @@ Review the result from the same terminal window.
 **NOTE:**
 
 You can add the options -v to enable the verbose mode to see the logs from the Payara Server, and if you want to debug, you
-need to use the option -d to enable port 9090 to attach the debugger.
+need to use the option -d to enable port 9009 to attach the debugger.
 
 ---
 
